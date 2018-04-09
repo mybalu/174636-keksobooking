@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Павел Сорокин](https://up.htmlacademy.ru/javascript/13/user/174636).
-* Наставник: `Неизвестно`.
+* Наставник: [Валерий Заочный].
 
 ---
 
