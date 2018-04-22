@@ -4,16 +4,16 @@ var giveMeRandom = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 var toShuffleArr = function (arr) {
-  var randomIndex = giveMeRandom(0, arr.length-1); // случайный индекс
+  var randomIndex = giveMeRandom(0, arr.length - 1); // случайный индекс
   var tempVar;
   for (var l = 0; l < arr.length; l++) {
     /* меняем местами случайный элемент массива с последним */
     tempVar = arr[randomIndex];
-    arr[randomIndex] = arr[arr.length-1];
-    arr[arr.length-1] = tempVar;
+    arr[randomIndex] = arr[arr.length - 1];
+    arr[arr.length - 1] = tempVar;
   }
   return arr;
-}
+};
 var advertsTemplate = [
   {"author": {
     "avatar": ["img/avatars/user01.png", "img/avatars/user02.png", "img/avatars/user03.png", "img/avatars/user04.png", "img/avatars/user05.png", "img/avatars/user06.png", "img/avatars/user07.png", "img/avatars/user08.png"]
@@ -95,7 +95,7 @@ for (var i = 0, max = advertsTemplate[0].author.avatar.length; i < max; i++) {
   for (var m = 0; m < photosData.length; m++) {
     var newImg = photosBox.appendChild(photoTemplate.cloneNode());
     newImg.setAttribute('src', photosData[m]);
-  };
+  }
 
   var coordinate = advertsTemplate[2].location;
   // Временное решение. mapPinStyle пока что не указывает острым концом, куда требуется. Исправить.
