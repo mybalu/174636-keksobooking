@@ -74,6 +74,8 @@ map.classList.remove('map--faded');
 
 var similarCard = document.querySelector('template').content.querySelector('.map__card.popup');// Это шаблон поп-апа карточки
 var similarMapPin = document.querySelector('template').content.querySelector('.map__pin');// Это шаблон кнопки-аватара
+var mapPinSpearheadPositionX = parseFloat(getComputedStyle(similarMapPin).width) / 2;// вычисляем, где находится острие метки в зависимости от ее размеров
+var mapPinSpearheadPositionY = parseFloat(getComputedStyle(similarMapPin).height);// вычисляем, где находится острие метки в зависимости от ее размеров
 var allPins = document.querySelector('.map__pins');// Это блок, куда нужно вставлять все-все готовые метки
 var fragmentForAllPins = document.createDocumentFragment();// Фрагмент, в который вставятся все метки и карточки
 
@@ -112,11 +114,13 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
     var newImg = photosBox.appendChild(photoTemplate.cloneNode());
     newImg.setAttribute('src', photosData[k]);
   }
-
+  // устанавливаем координаты меток
   var coordinate = advertsTemplate.location;
-  // Временное решение. mapPinStyle пока что не указывает острым концом, куда требуется. Исправить.
-  var mapPinStyle = 'left: ' + coordinate.x() + 'px; top: ' + coordinate.y() + 'px;';
-  mapPin.setAttribute('style', mapPinStyle);
+  var coordinateX = coordinate.x() - mapPinSpearheadPositionX + 'px';
+  var coordinateY = coordinate.y() - mapPinSpearheadPositionY + 'px';
+
+  mapPin.style.left = coordinateX;
+  mapPin.style.top = coordinateY;
 
   // Вставляем все в документ
   fragmentForAllPins.appendChild(card);
