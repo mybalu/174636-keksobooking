@@ -4,10 +4,11 @@ var giveMeRandom = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 var toShuffleArr = function (arr) {
-  var randomIndex = giveMeRandom(0, arr.length - 1); // случайный индекс
   var tempVar;
 
   for (var i = 0; i < arr.length; i++) {
+    var randomIndex = giveMeRandom(0, arr.length - 1); // случайный индекс, теперь в каждой итерации :)
+
     // меняем местами случайный элемент массива с последним
     tempVar = arr[randomIndex];
     arr[randomIndex] = arr[arr.length - 1];
@@ -81,8 +82,8 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
   var featuresCount = giveMeRandom(1, featuresList.length);
 
   if (featuresCount < featuresList.length) {
-    for (var k = featuresList.length - 1; k >= featuresCount; k--) {
-      featuresBox.removeChild(featuresList[k]);
+    for (var j = featuresList.length - 1; j >= featuresCount; j--) {
+      featuresBox.removeChild(featuresList[j]);
     }
   }
   card.querySelector('.popup__description').textContent = '';
@@ -93,9 +94,9 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
 
   photosBox.removeChild(photoTemplate);
   toShuffleArr(photosData);
-  for (var m = 0; m < photosData.length; m++) {
+  for (var k = 0; k < photosData.length; k++) {
     var newImg = photosBox.appendChild(photoTemplate.cloneNode());
-    newImg.setAttribute('src', photosData[m]);
+    newImg.setAttribute('src', photosData[k]);
   }
 
   var coordinate = advertsTemplate[2].location;
