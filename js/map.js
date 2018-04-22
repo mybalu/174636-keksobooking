@@ -1,4 +1,20 @@
 'use strict';
+var LANDLORD_COUNT = 8; // Число объектов недвижомости для сдачи
+var generateAvatars = function () {
+  var avatars = [];
+  for (var i = 1; i <= LANDLORD_COUNT; i++) {
+    var avatarInThisCycle;
+
+    // блок if на случай, если аватарок будет больше 10
+    if (i < 10) {
+      avatarInThisCycle = 'img/avatars/user0' + i + '.png';
+    } else {
+      avatarInThisCycle = 'img/avatars/user' + i + '.png';
+    }
+    avatars.push(avatarInThisCycle);
+  }
+  return avatars;
+}();
 var giveMeRandom = function (min, max) {
   max++;
   return Math.floor(Math.random() * (max - min) + min);
@@ -16,11 +32,11 @@ var toShuffleArr = function (arr) {
   }
   return arr;
 };
-var advertsTemplate = [
-  {"author": {
-    "avatar": ["img/avatars/user01.png", "img/avatars/user02.png", "img/avatars/user03.png", "img/avatars/user04.png", "img/avatars/user05.png", "img/avatars/user06.png", "img/avatars/user07.png", "img/avatars/user08.png"]
-  }},
-  {"offer": {
+var advertsTemplate = {
+  "author": {
+    "avatar": generateAvatars
+  },
+  "offer": {
     "title": ["Большая уютная квартира", "Маленькая неуютная квартира", "Огромный прекрасный дворец", "Маленький ужасный дворец", "Красивый гостевой домик", "Некрасивый негостеприимный домик", "Уютное бунгало далеко от моря", "Неуютное бунгало по колено в воде"],
     "address": function () {
       var locX = giveMeRandom(100, 999);
@@ -41,16 +57,16 @@ var advertsTemplate = [
     "features": ["wifi", "dishwasher", "parking", "washer", "elevator", "conditioner"],
     "description": "",
     "photos": ["http://o0.github.io/assets/images/tokyo/hotel1.jpg", "http://o0.github.io/assets/images/tokyo/hotel2.jpg", "http://o0.github.io/assets/images/tokyo/hotel3.jpg"]
-  }},
-  {"location": {
+  },
+  "location": {
     "x": function () {
       return giveMeRandom(300, 900);
     },
     "y": function () {
       return giveMeRandom(150, 900);
     }
-  }}
-];
+  }
+};
 
 var map = document.querySelector('.map');
 
@@ -62,14 +78,12 @@ var allPins = document.querySelector('.map__pins');// Это блок, куда 
 var fragmentForAllPins = document.createDocumentFragment();// Фрагмент, в который вставятся все метки и карточки
 
 // Тут клонирую метки из шаблона
-var LANDLORD_COUNT = advertsTemplate[0].author.avatar.length; // По количеству аваторов арендодателей судим, сколько всего объявлений (остальные признаки тоже сомнительные). Или надо было просто 8 написать?
-
 for (var i = 0; i < LANDLORD_COUNT; i++) {
   var card = similarCard.cloneNode(true);// одно из описаний объекта аренды
   var mapPin = similarMapPin.cloneNode(true);
-  var offer = advertsTemplate[1].offer;
+  var offer = advertsTemplate.offer;
 
-  card.querySelector('.popup__avatar').setAttribute('src', advertsTemplate[0].author.avatar[i]);
+  card.querySelector('.popup__avatar').setAttribute('src', advertsTemplate.author.avatar[i]);
   card.querySelector('.popup__title').textContent = offer.title[i];
   card.querySelector('.popup__text--address').textContent = offer.address();
   card.querySelector('.popup__text--price').innerHTML = offer.price() + '&#x20bd;<span>/ночь</span>';
@@ -99,7 +113,7 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
     newImg.setAttribute('src', photosData[k]);
   }
 
-  var coordinate = advertsTemplate[2].location;
+  var coordinate = advertsTemplate.location;
   // Временное решение. mapPinStyle пока что не указывает острым концом, куда требуется. Исправить.
   var mapPinStyle = 'left: ' + coordinate.x() + 'px; top: ' + coordinate.y() + 'px;';
   mapPin.setAttribute('style', mapPinStyle);
