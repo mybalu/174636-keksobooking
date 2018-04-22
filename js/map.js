@@ -6,8 +6,9 @@ var giveMeRandom = function (min, max) {
 var toShuffleArr = function (arr) {
   var randomIndex = giveMeRandom(0, arr.length - 1); // случайный индекс
   var tempVar;
-  for (var l = 0; l < arr.length; l++) {
-    /* меняем местами случайный элемент массива с последним */
+
+  for (var i = 0; i < arr.length; i++) {
+    // меняем местами случайный элемент массива с последним
     tempVar = arr[randomIndex];
     arr[randomIndex] = arr[arr.length - 1];
     arr[arr.length - 1] = tempVar;
@@ -23,21 +24,16 @@ var advertsTemplate = [
     "address": function () {
       var locX = giveMeRandom(100, 999);
       var locY = giveMeRandom(100, 999);
-      var randomAdress = locX + ", " + locY;
-      return randomAdress;
     },
     "price": function () {
-      var randomPrice = giveMeRandom(1000, 1000000);
-      return randomPrice;
+      return giveMeRandom(1000, 1000000);
     },
     "type": ["palace", "flat", "house", "bungalo"],
     "rooms": function () {
-      var randomRooms = giveMeRandom(1, 5);
-      return randomRooms;
+      return giveMeRandom(1, 5);
     },
     "guests": function () {
-      var randomGuests = giveMeRandom(1, 20);
-      return randomGuests;
+      return giveMeRandom(1, 20);
     },
     "checkin": ["12:00", "13:00", "14:00"],
     "checkout": ["12:00", "13:00", "14:00"],
@@ -47,17 +43,16 @@ var advertsTemplate = [
   }},
   {"location": {
     "x": function () {
-      var randomLocX = giveMeRandom(300, 900);
-      return randomLocX;
+      return giveMeRandom(300, 900);
     },
     "y": function () {
-      var randomLocY = giveMeRandom(150, 900);
-      return randomLocY;
+      return giveMeRandom(150, 900);
     }
   }}
 ];
 
 var map = document.querySelector('.map');
+
 map.classList.remove('map--faded');
 
 var similarCard = document.querySelector('template').content.querySelector('.map__card.popup');// Это шаблон поп-апа карточки
@@ -66,10 +61,13 @@ var allPins = document.querySelector('.map__pins');// Это блок, куда 
 var fragmentForAllPins = document.createDocumentFragment();// Фрагмент, в который вставятся все метки и карточки
 
 // Тут клонирую метки из шаблона
-for (var i = 0, max = advertsTemplate[0].author.avatar.length; i < max; i++) {
+var LANDLORD_COUNT = advertsTemplate[0].author.avatar.length; // По количеству аваторов арендодателей судим, сколько всего объявлений (остальные признаки тоже сомнительные). Или надо было просто 8 написать?
+
+for (var i = 0; i < LANDLORD_COUNT; i++) {
   var card = similarCard.cloneNode(true);// одно из описаний объекта аренды
   var mapPin = similarMapPin.cloneNode(true);
   var offer = advertsTemplate[1].offer;
+
   card.querySelector('.popup__avatar').setAttribute('src', advertsTemplate[0].author.avatar[i]);
   card.querySelector('.popup__title').textContent = offer.title[i];
   card.querySelector('.popup__text--address').textContent = offer.address();
@@ -77,9 +75,11 @@ for (var i = 0, max = advertsTemplate[0].author.avatar.length; i < max; i++) {
   card.querySelector('.popup__type').textContent = offer.type[giveMeRandom(0, 3)];
   card.querySelector('.popup__text--capacity').textContent = offer.rooms() + ' комнаты для ' + offer.guests() + ' гостей';
   card.querySelector('.popup__text--time').textContent = 'Заезд после ' + offer.checkin[giveMeRandom(0, 2)] + ', выезд до ' + offer.checkout[giveMeRandom(0, 2)];
+
   var featuresBox = card.querySelector('.popup__features');
   var featuresList = card.querySelectorAll('.popup__feature');
   var featuresCount = giveMeRandom(1, featuresList.length);
+
   if (featuresCount < featuresList.length) {
     for (var k = featuresList.length - 1; k >= featuresCount; k--) {
       featuresBox.removeChild(featuresList[k]);
@@ -89,8 +89,9 @@ for (var i = 0, max = advertsTemplate[0].author.avatar.length; i < max; i++) {
 
   var photosBox = card.querySelector('.popup__photos');
   var photoTemplate = card.querySelector('.popup__photo');
-  photosBox.removeChild(photoTemplate);
   var photosData = offer.photos;
+
+  photosBox.removeChild(photoTemplate);
   toShuffleArr(photosData);
   for (var m = 0; m < photosData.length; m++) {
     var newImg = photosBox.appendChild(photoTemplate.cloneNode());
@@ -106,33 +107,5 @@ for (var i = 0, max = advertsTemplate[0].author.avatar.length; i < max; i++) {
   fragmentForAllPins.appendChild(card);
   fragmentForAllPins.appendChild(mapPin);
 }
-// pageHeading.setAttribute('style', 'background: red;');
 // И вставляю их в разметку
 allPins.appendChild(fragmentForAllPins);
-
-// <template>
-// <article class="map__card popup">
-//   <img src="img/avatars/user01.png" class="popup__avatar" width="70" height="70" alt="Аватар пользователя">
-//   <button type="button" class="popup__close">Закрыть</button>
-//   <h3 class="popup__title">Уютное гнездышко для молодоженов</h3>
-// <p class="popup__text popup__text--address">102-0082 Tōkyō-to, Chiyoda-ku, Ichibanchō, 14−3</p>
-// <p class="popup__text popup__text--price">5200&#x20bd;<span>/ночь</span></p>
-// <h4 class="popup__type">Квартира</h4>
-//   <p class="popup__text popup__text--capacity">2 комнаты для 3 гостей</p>
-// <p class="popup__text popup__text--time">Заезд после 14:00, выезд до 10:00</p>
-// <ul class="popup__features">
-//   <li class="popup__feature popup__feature--wifi"></li>
-//   <li class="popup__feature popup__feature--dishwasher"></li>
-//   <li class="popup__feature popup__feature--parking"></li>
-//   <li class="popup__feature popup__feature--washer"></li>
-//   <li class="popup__feature popup__feature--elevator"></li>
-//   <li class="popup__feature popup__feature--conditioner"></li>
-//   </ul>
-//   <p class="popup__description">Великолепная квартира-студия в центре Токио. Подходит как туристам, так и бизнесменам. Квартира полностью укомплектована и недавно отремонтирована.</p>
-// <div class="popup__photos">
-//   <img src="" class="popup__photo" width="45" height="40" alt="Фотография жилья">
-//   </div>
-//   </article>
-//
-//   <button type="button" class="map__pin" style="left: 200px; top: 400px;"><img src="img/avatars/user07.png" width="40" height="40" draggable="false" alt="Метка объявления"></button>
-//   </template>
