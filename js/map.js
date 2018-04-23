@@ -63,7 +63,7 @@ var advertsTemplate = {
       return giveMeRandom(300, 900);
     },
     "y": function () {
-      return giveMeRandom(150, 900);
+      return giveMeRandom(150, 500);
     }
   }
 };
@@ -121,6 +121,7 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
 
   mapPin.style.left = coordinateX;
   mapPin.style.top = coordinateY;
+  mapPin.querySelector('img').setAttribute('src', advertsTemplate.author.avatar[i]);// аватары авторов на кнопке-пине тоже отрисуем)
 
   // Вставляем все в документ
   fragmentForAllPins.appendChild(card);
