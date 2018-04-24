@@ -36,23 +36,23 @@ var toShuffleArr = function (arr) {
 };
 var advertsTemplate = {
   'author': {
-    avatar: generateAvatars
+    getAvatar: generateAvatars
   },
   'offer': {
     'title': ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'],
-    'address': function () {
+    'getAddress': function () {
       var locX = giveMeRandom(100, 999);
       var locY = giveMeRandom(100, 999);
       return locX + ', ' + locY;
     },
-    'price': function () {
+    'getPrice': function () {
       return giveMeRandom(1000, 1000000);
     },
     'type': ['palace', 'flat', 'house', 'bungalo'],
-    'rooms': function () {
+    'getRooms': function () {
       return giveMeRandom(1, 5);
     },
-    'guests': function () {
+    'getGuests': function () {
       return giveMeRandom(1, 20);
     },
     'checkin': ['12:00', '13:00', '14:00'],
@@ -61,7 +61,7 @@ var advertsTemplate = {
     'description': '',
     'photos': ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg']
   },
-  'location': {
+  'getLocation': {
     'x': function () {
       return giveMeRandom(300, 900);
     },
@@ -90,12 +90,12 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
   var mapPinSpearheadPositionX = PIN_WIDTH / 2;// вычисляем, где находится острие метки в зависимости от ее размеров
   var mapPinSpearheadPositionY = PIN_HEIGHT;// вычисляем, где находится острие метки в зависимости от ее размеров
 
-  card.querySelector('.popup__avatar').setAttribute('src', advertsTemplate.author.avatar[i]);
+  card.querySelector('.popup__avatar').setAttribute('src', advertsTemplate.author.getAvatar[i]);
   card.querySelector('.popup__title').textContent = offer.title[i];
-  card.querySelector('.popup__text--address').textContent = offer.address();
-  card.querySelector('.popup__text--price').innerHTML = offer.price() + '&#x20bd;<span>/ночь</span>';
+  card.querySelector('.popup__text--address').textContent = offer.getAddress();
+  card.querySelector('.popup__text--price').innerHTML = offer.getPrice() + '&#x20bd;<span>/ночь</span>';
   card.querySelector('.popup__type').textContent = offer.type[giveMeRandom(0, 3)];
-  card.querySelector('.popup__text--capacity').textContent = offer.rooms() + ' комнаты для ' + offer.guests() + ' гостей';
+  card.querySelector('.popup__text--capacity').textContent = offer.getRooms() + ' комнаты для ' + offer.getGuests() + ' гостей';
   card.querySelector('.popup__text--time').textContent = 'Заезд после ' + offer.checkin[giveMeRandom(0, 2)] + ', выезд до ' + offer.checkout[giveMeRandom(0, 2)];
 
   var featuresBox = card.querySelector('.popup__features');
@@ -120,13 +120,13 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
     newImg.setAttribute('src', photosData[k]);
   }
   // устанавливаем координаты меток
-  var coordinate = advertsTemplate.location;
+  var coordinate = advertsTemplate.getLocation;
   var coordinateX = coordinate.x() - mapPinSpearheadPositionX + 'px';
   var coordinateY = coordinate.y() - mapPinSpearheadPositionY + 'px';
 
   mapPin.style.left = coordinateX;
   mapPin.style.top = coordinateY;
-  mapPin.querySelector('img').setAttribute('src', advertsTemplate.author.avatar[i]);// аватары авторов на кнопке-пине тоже отрисуем)
+  mapPin.querySelector('img').setAttribute('src', advertsTemplate.author.getAvatar[i]);// аватары авторов на кнопке-пине тоже отрисуем)
 
   // Вставляем все в фрагмент, но первую карточку - в отдельный фрагмент
   if (i === 0) {
