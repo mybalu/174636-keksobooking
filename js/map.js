@@ -35,37 +35,37 @@ var toShuffleArr = function (arr) {
   return arr;
 };
 var advertsTemplate = {
-  "author": {
-    "avatar": generateAvatars
+  'author': {
+    avatar: generateAvatars
   },
-  "offer": {
-    "title": ["Большая уютная квартира", "Маленькая неуютная квартира", "Огромный прекрасный дворец", "Маленький ужасный дворец", "Красивый гостевой домик", "Некрасивый негостеприимный домик", "Уютное бунгало далеко от моря", "Неуютное бунгало по колено в воде"],
-    "address": function () {
+  'offer': {
+    'title': ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'],
+    'address': function () {
       var locX = giveMeRandom(100, 999);
       var locY = giveMeRandom(100, 999);
       return locX + ', ' + locY;
     },
-    "price": function () {
+    'price': function () {
       return giveMeRandom(1000, 1000000);
     },
-    "type": ["palace", "flat", "house", "bungalo"],
-    "rooms": function () {
+    'type': ['palace', 'flat', 'house', 'bungalo'],
+    'rooms': function () {
       return giveMeRandom(1, 5);
     },
-    "guests": function () {
+    'guests': function () {
       return giveMeRandom(1, 20);
     },
-    "checkin": ["12:00", "13:00", "14:00"],
-    "checkout": ["12:00", "13:00", "14:00"],
-    "features": ["wifi", "dishwasher", "parking", "washer", "elevator", "conditioner"],
-    "description": "",
-    "photos": ["http://o0.github.io/assets/images/tokyo/hotel1.jpg", "http://o0.github.io/assets/images/tokyo/hotel2.jpg", "http://o0.github.io/assets/images/tokyo/hotel3.jpg"]
+    'checkin': ['12:00', '13:00', '14:00'],
+    'checkout': ['12:00', '13:00', '14:00'],
+    'features': ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
+    'description': '',
+    'photos': ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg']
   },
-  "location": {
-    "x": function () {
+  'location': {
+    'x': function () {
       return giveMeRandom(300, 900);
     },
-    "y": function () {
+    'y': function () {
       return giveMeRandom(150, 500);
     }
   }
