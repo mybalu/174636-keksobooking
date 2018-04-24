@@ -61,11 +61,11 @@ var advertsTemplate = {
     'description': '',
     'photos': ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg']
   },
-  'getLocation': {
-    'x': function () {
+  'location': {
+    'getX': function () {
       return giveMeRandom(300, 900);
     },
-    'y': function () {
+    'getY': function () {
       return giveMeRandom(150, 500);
     }
   }
@@ -120,9 +120,9 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
     newImg.setAttribute('src', photosData[k]);
   }
   // устанавливаем координаты меток
-  var coordinate = advertsTemplate.getLocation;
-  var coordinateX = coordinate.x() - mapPinSpearheadPositionX + 'px';
-  var coordinateY = coordinate.y() - mapPinSpearheadPositionY + 'px';
+  var coordinate = advertsTemplate.location;
+  var coordinateX = coordinate.getX() - mapPinSpearheadPositionX + 'px';
+  var coordinateY = coordinate.getY() - mapPinSpearheadPositionY + 'px';
 
   mapPin.style.left = coordinateX;
   mapPin.style.top = coordinateY;
