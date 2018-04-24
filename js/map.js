@@ -78,7 +78,9 @@ map.classList.remove('map--faded');
 var similarCard = document.querySelector('template').content.querySelector('.map__card.popup');// Это шаблон поп-апа карточки
 var similarMapPin = document.querySelector('template').content.querySelector('.map__pin');// Это шаблон кнопки-аватара
 var allPins = document.querySelector('.map__pins');// Это блок, куда нужно вставлять все-все готовые метки
-var fragmentForAllPins = document.createDocumentFragment();// Фрагмент, в который вставятся все метки и карточки
+var fragmentForAllPins = document.createDocumentFragment();// Фрагмент, в который вставятся все пины
+var fragmentForOtherCards = document.createDocumentFragment();// Фрагмент, в который вставятся все карточки, кроме первой
+var fragmentForFirstCard = document.createDocumentFragment();// Фрагмент, в который вставится первая карточка
 
 // Тут клонирую метки из шаблона
 for (var i = 0; i < LANDLORD_COUNT; i++) {
@@ -126,9 +128,14 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
   mapPin.style.top = coordinateY;
   mapPin.querySelector('img').setAttribute('src', advertsTemplate.author.avatar[i]);// аватары авторов на кнопке-пине тоже отрисуем)
 
-  // Вставляем все в документ
-  fragmentForAllPins.appendChild(card);
+  // Вставляем все в фрагмент, но первую карточку - в отдельный фрагмент
+  if (i === 0) {
+    fragmentForFirstCard.appendChild(card);
+  } else {
+    fragmentForOtherCards.appendChild(card);
+  }
   fragmentForAllPins.appendChild(mapPin);
 }
-// И вставляю их в разметку
+// И вставляю их в разметку все пины и первую карточку
 allPins.appendChild(fragmentForAllPins);
+allPins.appendChild(fragmentForFirstCard);
