@@ -43,6 +43,7 @@ var advertsTemplate = {
     "address": function () {
       var locX = giveMeRandom(100, 999);
       var locY = giveMeRandom(100, 999);
+      return locX + ', ' + locY;
     },
     "price": function () {
       return giveMeRandom(1000, 1000000);
