@@ -1,5 +1,7 @@
 'use strict';
-var LANDLORD_COUNT = 8; // Число объектов недвижомости для сдачи
+var LANDLORD_COUNT = 8;// Число объектов недвижомости для сдачи
+var PIN_WIDTH = 50;// ширина пина, которым устанавливается положение объекта на карте
+var PIN_HEIGHT = 70;// высота пина, которым устанавливается положение объекта на карте
 var generateAvatars = function () {
   var avatars = [];
   for (var i = 1; i <= LANDLORD_COUNT; i++) {
@@ -74,8 +76,6 @@ map.classList.remove('map--faded');
 
 var similarCard = document.querySelector('template').content.querySelector('.map__card.popup');// Это шаблон поп-апа карточки
 var similarMapPin = document.querySelector('template').content.querySelector('.map__pin');// Это шаблон кнопки-аватара
-var mapPinSpearheadPositionX = parseFloat(getComputedStyle(similarMapPin).width) / 2;// вычисляем, где находится острие метки в зависимости от ее размеров
-var mapPinSpearheadPositionY = parseFloat(getComputedStyle(similarMapPin).height);// вычисляем, где находится острие метки в зависимости от ее размеров
 var allPins = document.querySelector('.map__pins');// Это блок, куда нужно вставлять все-все готовые метки
 var fragmentForAllPins = document.createDocumentFragment();// Фрагмент, в который вставятся все метки и карточки
 
@@ -84,6 +84,8 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
   var card = similarCard.cloneNode(true);// одно из описаний объекта аренды
   var mapPin = similarMapPin.cloneNode(true);
   var offer = advertsTemplate.offer;
+  var mapPinSpearheadPositionX = PIN_WIDTH / 2;// вычисляем, где находится острие метки в зависимости от ее размеров
+  var mapPinSpearheadPositionY = PIN_HEIGHT;// вычисляем, где находится острие метки в зависимости от ее размеров
 
   card.querySelector('.popup__avatar').setAttribute('src', advertsTemplate.author.avatar[i]);
   card.querySelector('.popup__title').textContent = offer.title[i];
