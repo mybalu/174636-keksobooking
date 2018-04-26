@@ -79,20 +79,11 @@ var similarCard = document.querySelector('template').content.querySelector('.map
 var similarMapPin = document.querySelector('template').content.querySelector('.map__pin');// Это шаблон кнопки-аватара
 var allPins = document.querySelector('.map__pins');// Это блок, куда нужно вставлять все-все готовые метки
 var fragmentForAllPins = document.createDocumentFragment();// Фрагмент, в который вставятся все пины
-var fragmentForOtherCards = document.createDocumentFragment();// Фрагмент, в который вставятся все карточки, кроме первой
-var fragmentForFirstCard = document.createDocumentFragment();// Фрагмент, в который вставится первая карточка
-
-// Тут клонирую метки из шаблона
-for (var i = 0; i < LANDLORD_COUNT; i++) {
-  var card = similarCard.cloneNode(true);// одно из описаний объекта аренды, весь блок <article class="map__card popup">
-  var mapPin = similarMapPin.cloneNode(true);// это пин <button type="button" class="map__pin" style="..."><img src="..." width="40" height="40" draggable="false" alt="..."></button>
-  var offer = advertsTemplate.offer;// Это из объекта с данными.
-  var mapPinSpearheadPositionX = PIN_WIDTH / 2;// вычисляем, где находится острие метки в зависимости от ее размеров
-  var mapPinSpearheadPositionY = PIN_HEIGHT;// вычисляем, где находится острие метки в зависимости от ее размеров
-
-  // вот тут отрисовывается карточка, как раз что нужно вынести в функцию
-  card.querySelector('.popup__avatar').setAttribute('src', advertsTemplate.author.getAvatar[i]);
-  card.querySelector('.popup__title').textContent = offer.title[i];
+// функция для генерации карточки
+var generatePopupCard = function (numberOfCard) {
+  // карточка наполянется из объекта с данными
+  card.querySelector('.popup__avatar').setAttribute('src', advertsTemplate.author.getAvatar[numberOfCard]);
+  card.querySelector('.popup__title').textContent = offer.title[numberOfCard];
   card.querySelector('.popup__text--address').textContent = offer.getAddress();
   card.querySelector('.popup__text--price').innerHTML = offer.getPrice() + '&#x20bd;<span>/ночь</span>';
   card.querySelector('.popup__type').textContent = offer.type[giveMeRandom(0, 3)];
@@ -105,8 +96,8 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
 
   // если фич меньше, чем вообще возможно, убираем их из конкретной карточки (потому что в шаблоне список полный)
   if (featuresCount < featuresList.length) {
-    for (var j = featuresList.length - 1; j >= featuresCount; j--) {
-      featuresBox.removeChild(featuresList[j]);
+    for (var i = featuresList.length - 1; i >= featuresCount; i--) {
+      featuresBox.removeChild(featuresList[i]);
     }
   }
   card.querySelector('.popup__description').textContent = '';// описание объекта недвижимости, в шаблоне есть, потому очищаем
@@ -121,6 +112,16 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
     var newImg = photosBox.appendChild(photoTemplate.cloneNode());
     newImg.setAttribute('src', photosData[k]);
   }
+  var temp = document.querySelector('.map__filters-container');// перед чем вставлять карточку
+  temp.insertAdjacentElement('beforeBegin', card);
+};
+// Тут клонирую пины из шаблона и потом вставляю в фрагмент
+for (var i = 0; i < LANDLORD_COUNT; i++) {
+  var card = similarCard.cloneNode(true);// одно из описаний объекта аренды, весь блок <article class="map__card popup">
+  var mapPin = similarMapPin.cloneNode(true);// это пин <button type="button" class="map__pin" style="..."><img src="..." width="40" height="40" draggable="false" alt="..."></button>
+  var offer = advertsTemplate.offer;// Это из объекта с данными.
+  var mapPinSpearheadPositionX = PIN_WIDTH / 2;// вычисляем, где находится острие метки в зависимости от ее размеров
+  var mapPinSpearheadPositionY = PIN_HEIGHT;// вычисляем, где находится острие метки в зависимости от ее размеров
   // устанавливаем координаты меток
   var coordinate = advertsTemplate.location;
   var coordinateX = coordinate.getX() - mapPinSpearheadPositionX + 'px';
@@ -129,9 +130,9 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
   mapPin.style.left = coordinateX;
   mapPin.style.top = coordinateY;
   mapPin.querySelector('img').setAttribute('src', advertsTemplate.author.getAvatar[i]);// аватары авторов на кнопке-пине тоже отрисуем)
-
   // Вставляем все пины в фрагмент
   fragmentForAllPins.appendChild(mapPin);
 }
-// И вставляю их в разметку все пины и первую карточку
+// И вставляю все пины в разметку
 allPins.appendChild(fragmentForAllPins);
+generatePopupCard(0);// отрисовываем первую карточку
