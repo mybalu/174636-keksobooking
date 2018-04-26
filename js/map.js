@@ -112,8 +112,8 @@ var generatePopupCard = function (numberOfCard) {
     var newImg = photosBox.appendChild(photoTemplate.cloneNode());
     newImg.setAttribute('src', photosData[k]);
   }
-  var temp = document.querySelector('.map__filters-container');// перед чем вставлять карточку
-  temp.insertAdjacentElement('beforeBegin', card);
+  var filtersContainer = document.querySelector('.map__filters-container');// перед чем вставлять карточку
+  filtersContainer.insertAdjacentElement('beforeBegin', card);
 };
 // Тут клонирую пины из шаблона и потом вставляю в фрагмент
 for (var i = 0; i < LANDLORD_COUNT; i++) {
