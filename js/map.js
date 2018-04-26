@@ -84,12 +84,13 @@ var fragmentForFirstCard = document.createDocumentFragment();// Фрагмент
 
 // Тут клонирую метки из шаблона
 for (var i = 0; i < LANDLORD_COUNT; i++) {
-  var card = similarCard.cloneNode(true);// одно из описаний объекта аренды
-  var mapPin = similarMapPin.cloneNode(true);
-  var offer = advertsTemplate.offer;
+  var card = similarCard.cloneNode(true);// одно из описаний объекта аренды, весь блок <article class="map__card popup">
+  var mapPin = similarMapPin.cloneNode(true);// это пин <button type="button" class="map__pin" style="..."><img src="..." width="40" height="40" draggable="false" alt="..."></button>
+  var offer = advertsTemplate.offer;// Это из объекта с данными.
   var mapPinSpearheadPositionX = PIN_WIDTH / 2;// вычисляем, где находится острие метки в зависимости от ее размеров
   var mapPinSpearheadPositionY = PIN_HEIGHT;// вычисляем, где находится острие метки в зависимости от ее размеров
 
+  // вот тут отрисовывается карточка, как раз что нужно вынести в функцию
   card.querySelector('.popup__avatar').setAttribute('src', advertsTemplate.author.getAvatar[i]);
   card.querySelector('.popup__title').textContent = offer.title[i];
   card.querySelector('.popup__text--address').textContent = offer.getAddress();
@@ -98,22 +99,23 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
   card.querySelector('.popup__text--capacity').textContent = offer.getRooms() + ' комнаты для ' + offer.getGuests() + ' гостей';
   card.querySelector('.popup__text--time').textContent = 'Заезд после ' + offer.checkin[giveMeRandom(0, 2)] + ', выезд до ' + offer.checkout[giveMeRandom(0, 2)];
 
-  var featuresBox = card.querySelector('.popup__features');
-  var featuresList = card.querySelectorAll('.popup__feature');
-  var featuresCount = giveMeRandom(1, featuresList.length);
+  var featuresBox = card.querySelector('.popup__features');// список фич объекта недвижимости, тоже из карточки
+  var featuresList = card.querySelectorAll('.popup__feature');// конкретная фича (wi-fi, кондиционер и пр.)
+  var featuresCount = giveMeRandom(1, featuresList.length);// сколько фич всего в конкретном объекте
 
+  // если фич меньше, чем вообще возможно, убираем их из конкретной карточки (потому что в шаблоне список полный)
   if (featuresCount < featuresList.length) {
     for (var j = featuresList.length - 1; j >= featuresCount; j--) {
       featuresBox.removeChild(featuresList[j]);
     }
   }
-  card.querySelector('.popup__description').textContent = '';
+  card.querySelector('.popup__description').textContent = '';// описание объекта недвижимости, в шаблоне есть, потому очищаем
 
-  var photosBox = card.querySelector('.popup__photos');
-  var photoTemplate = card.querySelector('.popup__photo');
-  var photosData = offer.photos;
+  var photosBox = card.querySelector('.popup__photos');// блок с фотками объекта недвижимости из карточки
+  var photoTemplate = card.querySelector('.popup__photo');// одно конкретное фото из предыдущего блока
+  var photosData = offer.photos;// фотки из массива с данными
 
-  photosBox.removeChild(photoTemplate);
+  photosBox.removeChild(photoTemplate);// убираем то фото, что есть в шаблоне, сейчас свои загрузим туда
   toShuffleArr(photosData);
   for (var k = 0; k < photosData.length; k++) {
     var newImg = photosBox.appendChild(photoTemplate.cloneNode());
