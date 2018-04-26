@@ -130,14 +130,8 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
   mapPin.style.top = coordinateY;
   mapPin.querySelector('img').setAttribute('src', advertsTemplate.author.getAvatar[i]);// аватары авторов на кнопке-пине тоже отрисуем)
 
-  // Вставляем все в фрагмент, но первую карточку - в отдельный фрагмент
-  if (i === 0) {
-    fragmentForFirstCard.appendChild(card);
-  } else {
-    fragmentForOtherCards.appendChild(card);
-  }
+  // Вставляем все пины в фрагмент
   fragmentForAllPins.appendChild(mapPin);
 }
 // И вставляю их в разметку все пины и первую карточку
 allPins.appendChild(fragmentForAllPins);
-allPins.appendChild(fragmentForFirstCard);
