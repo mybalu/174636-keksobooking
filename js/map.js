@@ -117,7 +117,7 @@ var generatePopupCard = function (numberOfCard) {
   filtersContainer.insertAdjacentElement('beforeBegin', card);
 };
 // Генерирует пины из шаблона и объекта с данными
-var generateMapPin = function () {
+var generateMapPin = function (countInARow) {
   var mapPin = similarMapPin.cloneNode(true);// это пин <button type="button" class="map__pin" style="..."><img src="..." width="40" height="40" draggable="false" alt="..."></button>
   var mapPinSpearheadPositionX = PIN_WIDTH / 2;// вычисляем, где находится острие метки в зависимости от ее размеров
   var mapPinSpearheadPositionY = PIN_HEIGHT;// вычисляем, где находится острие метки в зависимости от ее размеров
@@ -128,15 +128,14 @@ var generateMapPin = function () {
 
   mapPin.style.left = coordinateX;
   mapPin.style.top = coordinateY;
-  mapPin.querySelector('img').setAttribute('src', advertsTemplate.author.getAvatar[i]);// аватары авторов на кнопке-пине тоже отрисуем)
+  mapPin.querySelector('img').setAttribute('src', advertsTemplate.author.getAvatar[countInARow]);// аватары авторов на кнопке-пине тоже отрисуем)
   // Вставляем сделанный пин в фрагмент
   fragmentForAllPins.appendChild(mapPin);
 };
 
 // Генерируем пины
-for (var i = 0; i < LANDLORD_COUNT - 1; i++) {
-  generateMapPin();
+for (var i = 0; i < LANDLORD_COUNT; i++) {
+  generateMapPin(i);
 }
-generateMapPin();// генерируем пины
 allPins.appendChild(fragmentForAllPins);// вставляем пины в разметку
 generatePopupCard(0);// отрисовываем первую popup карточку
