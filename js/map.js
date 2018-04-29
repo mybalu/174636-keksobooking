@@ -71,8 +71,22 @@ var advertsTemplate = {
   }
 };
 var map = document.querySelector('.map');
+var formFieldset = document.querySelectorAll('fieldset');
+var pinMain = map.querySelector('.map__pin--main');
 
-map.classList.remove('map--faded');
+formFieldset.forEach(function (currentValue) {
+  currentValue.setAttribute('disabled', 'disabled');
+});
+
+var setActivePage = function (evt) {
+  map.classList.remove('map--faded');
+  formFieldset.forEach(function (currentValue) {
+    currentValue.removeAttribute('disabled', 'disabled');
+  });
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+};
+
+pinMain.addEventListener('mouseup', setActivePage);
 
 var similarCard = document.querySelector('template').content.querySelector('.map__card.popup');// Это шаблон поп-апа карточки
 var similarMapPin = document.querySelector('template').content.querySelector('.map__pin');// Это шаблон кнопки-аватара
