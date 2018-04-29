@@ -78,16 +78,6 @@ formFieldset.forEach(function (currentValue) {
   currentValue.setAttribute('disabled', 'disabled');
 });
 
-var setActivePage = function (evt) {
-  map.classList.remove('map--faded');
-  formFieldset.forEach(function (currentValue) {
-    currentValue.removeAttribute('disabled', 'disabled');
-  });
-  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
-};
-
-pinMain.addEventListener('mouseup', setActivePage);
-
 var similarCard = document.querySelector('template').content.querySelector('.map__card.popup');// Это шаблон поп-апа карточки
 var similarMapPin = document.querySelector('template').content.querySelector('.map__pin');// Это шаблон кнопки-аватара
 var allPins = document.querySelector('.map__pins');// Это блок, куда нужно вставлять все-все готовые метки
@@ -151,5 +141,15 @@ var generateMapPin = function (avatarArr) {
 for (var i = 0; i < LANDLORD_COUNT; i++) {
   generateMapPin(advertsTemplate.author.getAvatar[i]);
 }
-allPins.appendChild(fragmentForAllPins);// вставляем пины в разметку
-generatePopupCard(0);// отрисовываем первую popup карточку
+
+var setActivePage = function (evt) {
+  allPins.appendChild(fragmentForAllPins);// вставляем пины в разметку
+  generatePopupCard(0);// отрисовываем первую popup карточку
+  map.classList.remove('map--faded');
+  formFieldset.forEach(function (currentValue) {
+    currentValue.removeAttribute('disabled', 'disabled');
+  });
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+};
+
+pinMain.addEventListener('mouseup', setActivePage);
