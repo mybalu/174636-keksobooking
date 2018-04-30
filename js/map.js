@@ -73,11 +73,6 @@ var advertsTemplate = {
 var map = document.querySelector('.map');
 var formFieldset = document.querySelectorAll('fieldset');
 var pinMain = map.querySelector('.map__pin--main');
-
-formFieldset.forEach(function (currentValue) {
-  currentValue.setAttribute('disabled', 'disabled');
-});
-
 var similarCard = document.querySelector('template').content.querySelector('.map__card.popup');// Это шаблон поп-апа карточки
 var similarMapPin = document.querySelector('template').content.querySelector('.map__pin');// Это шаблон кнопки-аватара
 var allPins = document.querySelector('.map__pins');// Это блок, куда нужно вставлять все-все готовые метки
@@ -151,5 +146,66 @@ var setActivePage = function (evt) {
   });
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 };
+var currentAdressInput = document.getElementById('address');
+var watchDocument = function (evt) {
+  console.log('X = ' + evt.clientX + ', Y = ' + evt.clientY);
+  var startCoord = {
+    x: 570,// parseFloat(pinMain.style.left),
+    y: 375// parseFloat(pinMain.style.top)
+  };
+  // var startCoord = {
+  //   x: parseFloat(pinMain.style.left),
+  //   y: parseFloat(pinMain.style.top)
+  // };
+  var xCoord = function () {
+    return evt.clientX;
+  };
+  var yCoord = function () {
+    return evt.clientY;
+  };
+  // document.body.appendChild(pinMain); думаю, это не нужно
+  // pinMain.zIndex = 1000; тоже
 
+  pinMain.style.left = xCoord() - startCoord.x + 'px';
+  pinMain.style.top = yCoord() - startCoord.y + 'px';
+};
+var dontWatchDocument = function () {
+  document.removeEventListener('mousemove', watchDocument);
+};
+var watchThePin = function () {
+  document.addEventListener('mousemove', watchDocument);
+};
+
+// Добавим обработчиков событий при клике на главный(?) пин
 pinMain.addEventListener('mouseup', setActivePage);
+// pinMain.addEventListener('mouseup', setActivePage);
+pinMain.addEventListener('mousedown', watchThePin);
+pinMain.removeEventListener('mouseup', dontWatchDocument);
+// pinMain.addEventListener('mousemove', setActivePage);
+
+// Адрес, который будет ставиться в форму. Значение пока заглушка.
+var setCurrentAdress = function () {
+  currentAdressInput.value = '500, 600';
+};
+
+// Нам нужна функция, которая будет видеть куда тянут пин.
+// При клике на пине должен добавляться обработчик. Т. е. при mousedown мы должны добавлять еще другой обработчик - mousemove (на весь документ?)
+// Затем мы должны получать координаты с этого обработчика.
+// Делать поправку на размер пина
+// Сразу писать эти координаты в стили пина и перерисовывать пин
+// А при mouseup писать эти координаты в значение currentAdressInput с помощью функции setCurrentAdress
+
+// К сожалению, готовой функции для получения координат элемента относительно страницы нет. Но её можно легко написать самим.
+//   Эти две системы координат жёстко связаны: pageY = clientY + текущая вертикальная прокрутка.
+//   Наша функция getCoords(elem) будет брать результат elem.getBoundingClientRect() и прибавлять текущую прокрутку документа.
+//   Результат getCoords: объект с координатами {left: .., top: ..}
+//
+// function getCoords(elem) { // кроме IE8-
+//   var box = elem.getBoundingClientRect();
+//
+//   return {
+//     top: box.top + pageYOffset,
+//     left: box.left + pageXOffset
+//   };
+//
+// }
