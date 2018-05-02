@@ -138,18 +138,17 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
   generateMapPin(advertsTemplate.author.getAvatar[i]);
 }
 
+var currentAdressInput = document.getElementById('address');
 var setActivePage = function () {
   allPins.appendChild(fragmentForAllPins);// вставляем пины в разметку
   generatePopupCard(0);// отрисовываем первую popup карточку
   map.classList.remove('map--faded');
   formFieldset.forEach(function (currentValue) {
-    currentValue.removeAttribute('disabled', 'disabled');
+    currentValue.removeAttribute('disabled');
   });
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   currentAdressInput.value = DEFAULT_ADDRESS;
 };
-var currentAdressInput = document.getElementById('address');
-
 // Получает координаты элемента в документе с учетом прокрутки
 var getCoords = function (elem) {
   var box = elem.getBoundingClientRect();
@@ -170,18 +169,15 @@ var pinSize = function (elem) {
 // и делаем поправку на размер элемента, чтобы он не дергался под курсором при клике
 var deltaCoord = function (elem) {
   return {
-    x: parseFloat(pinMain.style.left) - Math.floor(getCoords(pinMain).x) - pinSize(pinMain).eWidth,
-    y: parseFloat(pinMain.style.top) - Math.floor(getCoords(pinMain).y) - pinSize(pinMain).eHeight
+    x: parseFloat(pinMain.style.left) - Math.floor(getCoords(elem).x) - pinSize(elem).eWidth,
+    y: parseFloat(pinMain.style.top) - Math.floor(getCoords(elem).y) - pinSize(elem).eHeight
   };
 };
-
-
 var moveElement = function (evt) {
   // pinMain.style.zIndex = 100;
   pinMain.style.left = evt.pageX + deltaCoord(pinMain).x + 'px';
   pinMain.style.top = evt.pageY + deltaCoord(pinMain).y + 'px';
 };
-
 var watchThePin = function () {
   document.addEventListener('mousemove', moveElement);
 };
@@ -189,37 +185,13 @@ var dontWatchDocument = function () {
   setCurrentAdress();
   document.removeEventListener('mousemove', moveElement);
 };
-
-// Добавим обработчиков событий при клике на главный(?) пин
-pinMain.addEventListener('mouseup', setActivePage);
-pinMain.addEventListener('mousedown', watchThePin);
-pinMain.addEventListener('mouseup', dontWatchDocument);
-
 // Ставит в форму адрес/координаты пина
 var setCurrentAdress = function () {
   // высоту метки мы делили попалам, чтобы не прыгал курсор при перетаскивании.
   // Но ее острый конец - это низ метки, а значит вся высота. Потому (pinMain.style.top) * 2
   currentAdressInput.value = parseFloat(pinMain.style.left) + ', ' + parseFloat(pinMain.style.top) * 2;
 };
-
-// Нам нужна функция, которая будет видеть куда тянут пин.
-// При клике на пине должен добавляться обработчик. Т. е. при mousedown мы должны добавлять еще другой обработчик - mousemove (на весь документ?)
-// Затем мы должны получать координаты с этого обработчика.
-// Делать поправку на размер пина
-// Сразу писать эти координаты в стили пина и перерисовывать пин
-// А при mouseup писать эти координаты в значение currentAdressInput с помощью функции setCurrentAdress
-
-// К сожалению, готовой функции для получения координат элемента относительно страницы нет. Но её можно легко написать самим.
-//   Эти две системы координат жёстко связаны: pageY = clientY + текущая вертикальная прокрутка.
-//   Наша функция getCoords(elem) будет брать результат elem.getBoundingClientRect() и прибавлять текущую прокрутку документа.
-//   Результат getCoords: объект с координатами {left: .., top: ..}
-//
-// function getCoords(elem) { // кроме IE8-
-//   var box = elem.getBoundingClientRect();
-//
-//   return {
-//     top: box.top + pageYOffset,
-//     left: box.left + pageXOffset
-//   };
-//
-// }
+// Добавим обработчиков событий при клике на главный(?) пин
+pinMain.addEventListener('mouseup', setActivePage);
+pinMain.addEventListener('mousedown', watchThePin);
+pinMain.addEventListener('mouseup', dontWatchDocument);
