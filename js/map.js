@@ -2,6 +2,7 @@
 var LANDLORD_COUNT = 8;// Число объектов недвижомости для сдачи
 var PIN_WIDTH = 50;// ширина пина, которым устанавливается положение объекта на карте
 var PIN_HEIGHT = 70;// высота пина, которым устанавливается положение объекта на карте
+var DEFAULT_ADDRESS = '570, 375';// координаты главного пина по умолчанию
 var generateAvatars = function () {
   var avatars = [];
   for (var i = 1; i <= LANDLORD_COUNT; i++) {
@@ -145,6 +146,7 @@ var setActivePage = function () {
     currentValue.removeAttribute('disabled', 'disabled');
   });
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+  currentAdressInput.value = DEFAULT_ADDRESS;
 };
 var currentAdressInput = document.getElementById('address');
 
@@ -184,6 +186,7 @@ var watchThePin = function () {
   document.addEventListener('mousemove', moveElement);
 };
 var dontWatchDocument = function () {
+  setCurrentAdress();
   document.removeEventListener('mousemove', moveElement);
 };
 
@@ -192,9 +195,11 @@ pinMain.addEventListener('mouseup', setActivePage);
 pinMain.addEventListener('mousedown', watchThePin);
 pinMain.addEventListener('mouseup', dontWatchDocument);
 
-// Адрес, который будет ставиться в форму. Значение пока заглушка.
+// Ставит в форму адрес/координаты пина
 var setCurrentAdress = function () {
-  currentAdressInput.value = '500, 600';
+  // высоту метки мы делили попалам, чтобы не прыгал курсор при перетаскивании.
+  // Но ее острый конец - это низ метки, а значит вся высота. Потому (pinMain.style.top) * 2
+  currentAdressInput.value = parseFloat(pinMain.style.left) + ', ' + parseFloat(pinMain.style.top) * 2;
 };
 
 // Нам нужна функция, которая будет видеть куда тянут пин.
