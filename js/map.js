@@ -137,7 +137,7 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
   generateMapPin(advertsTemplate.author.getAvatar[i]);
 }
 
-var setActivePage = function (evt) {
+var setActivePage = function () {
   allPins.appendChild(fragmentForAllPins);// вставляем пины в разметку
   generatePopupCard(0);// отрисовываем первую popup карточку
   map.classList.remove('map--faded');
@@ -175,9 +175,9 @@ var deltaCoord = function (elem) {
 
 
 var moveElement = function (evt) {
-  pinMain.style.zIndex = 100;
-  pinMain.style.left = evt.clientX + deltaCoord(pinMain).x + 'px';
-  pinMain.style.top = evt.clientY + deltaCoord(pinMain).y + 'px';
+  // pinMain.style.zIndex = 100;
+  pinMain.style.left = evt.pageX + deltaCoord(pinMain).x + 'px';
+  pinMain.style.top = evt.pageY + deltaCoord(pinMain).y + 'px';
 };
 
 var watchThePin = function () {
@@ -190,7 +190,7 @@ var dontWatchDocument = function () {
 // Добавим обработчиков событий при клике на главный(?) пин
 pinMain.addEventListener('mouseup', setActivePage);
 pinMain.addEventListener('mousedown', watchThePin);
-pinMain.removeEventListener('mouseup', dontWatchDocument);
+pinMain.addEventListener('mouseup', dontWatchDocument);
 
 // Адрес, который будет ставиться в форму. Значение пока заглушка.
 var setCurrentAdress = function () {
