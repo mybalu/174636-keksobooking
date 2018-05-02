@@ -147,41 +147,50 @@ var setActivePage = function (evt) {
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 };
 var currentAdressInput = document.getElementById('address');
-var watchDocument = function (evt) {
-  console.log('X = ' + evt.clientX + ', Y = ' + evt.clientY);
-  var startCoord = {
-    x: 570,// parseFloat(pinMain.style.left),
-    y: 375// parseFloat(pinMain.style.top)
-  };
-  // var startCoord = {
-  //   x: parseFloat(pinMain.style.left),
-  //   y: parseFloat(pinMain.style.top)
-  // };
-  var xCoord = function () {
-    return evt.clientX;
-  };
-  var yCoord = function () {
-    return evt.clientY;
-  };
-  // document.body.appendChild(pinMain); думаю, это не нужно
-  // pinMain.zIndex = 1000; тоже
 
-  pinMain.style.left = xCoord() - startCoord.x + 'px';
-  pinMain.style.top = yCoord() - startCoord.y + 'px';
+// Получает координаты элемента в документе с учетом прокрутки
+var getCoords = function (elem) {
+  var box = elem.getBoundingClientRect();
+
+  return {
+    y: box.top + pageYOffset,
+    x: box.left + pageXOffset
+  };
+};
+// Вычисляет и делит пополам ширину и высоту элемента
+var pinSize = function (elem) {
+  return {
+    eWidth: Math.floor((parseFloat(getComputedStyle(elem).width) / 2)),
+    eHeight: Math.floor((parseFloat(getComputedStyle(elem).height) / 2))
+  };
+};
+// Вычисляем разницу между полученными выше координатами и тем, что стоит в стилях элемента top, left
+// и делаем поправку на размер элемента, чтобы он не дергался под курсором при клике
+var deltaCoord = function (elem) {
+  return {
+    x: parseFloat(pinMain.style.left) - Math.floor(getCoords(pinMain).x) - pinSize(pinMain).eWidth,
+    y: parseFloat(pinMain.style.top) - Math.floor(getCoords(pinMain).y) - pinSize(pinMain).eHeight
+  };
+};
+
+
+var moveElement = function (evt) {
+  pinMain.style.zIndex = 100;
+  pinMain.style.left = evt.clientX + deltaCoord(pinMain).x + 'px';
+  pinMain.style.top = evt.clientY + deltaCoord(pinMain).y + 'px';
+};
+
+var watchThePin = function () {
+  document.addEventListener('mousemove', moveElement);
 };
 var dontWatchDocument = function () {
-  document.removeEventListener('mousemove', watchDocument);
-};
-var watchThePin = function () {
-  document.addEventListener('mousemove', watchDocument);
+  document.removeEventListener('mousemove', moveElement);
 };
 
 // Добавим обработчиков событий при клике на главный(?) пин
 pinMain.addEventListener('mouseup', setActivePage);
-// pinMain.addEventListener('mouseup', setActivePage);
 pinMain.addEventListener('mousedown', watchThePin);
 pinMain.removeEventListener('mouseup', dontWatchDocument);
-// pinMain.addEventListener('mousemove', setActivePage);
 
 // Адрес, который будет ставиться в форму. Значение пока заглушка.
 var setCurrentAdress = function () {
