@@ -255,34 +255,30 @@ CustomValidation.prototype = {
   checkValidity: function (input) {
     var validity = input.validity;
 
-    // это, кажется, не применяю
-    // if (validity.patternMismatch) {
-    //   this.addInvalidity('This is the wrong pattern for this field');
-    // }
-
     if (validity.rangeOverflow) {
       var max = getAttributeValue(input, 'max');
-      this.addInvalidity('Допустимая максимальная длина ' + max);
+      this.addInvalidity('Допустимая максимальная величина ' + max);
     }
     if (validity.rangeUnderflow) {
       var min = getAttributeValue(input, 'min');
-      this.addInvalidity('Допустимая минимальная длина ' + min);
+      this.addInvalidity('Допустимая минимальная величина ' + min);
     }
-    // это не использую?
-    // if (validity.stepMismatch) {
-    //   var step = getAttributeValue(input, 'step');
-    //   this.addInvalidity('Значение должно быть кратно ' + step);
-    // }
+    if (validity.tooLong) {
+      var maxlength = getAttributeValue(input, 'maxlength');
+      this.addInvalidity('Допустимая максимальная длина ' + maxlength);
+    }
+    if (validity.tooShort) {
+      var minlength = getAttributeValue(input, 'minlength');
+      this.addInvalidity('Допустимая минимальная длина ' + minlength);
+    }
     if (!validity.valueMissing) {
-      this.addInvalidity('Это поле обязательно для заполнения');
+      this.addInvalidity('Это поле заполнено неверно либо не заполнено');
     }
   },
-
   // Добавляем сообщение об ошибке в массив ошибок
   addInvalidity: function (message) {
     this.invalidities.push(message);
   },
-
   // Получаем общий текст сообщений об ошибках
   getInvalidities: function () {
     return this.invalidities.join('. \n');
@@ -292,13 +288,17 @@ CustomValidation.prototype = {
 // Будет писать каждую ошибку с новой строки
 CustomValidation.prototype.getInvaliditiesForHTML = function () {
   return this.invalidities.join('. <br>');
-}
+};
 
 // Добавляем обработчик клика на кнопку отправки формы
 var submit = document.querySelector('button[type="submit"]');
-var inputs = document.querySelectorAll('input');
+var inputs = document.querySelector('.ad-form').querySelectorAll('input');
 
 submit.addEventListener('click', function (evt) {
+  // удалим старые сообщения об ошибках, если они есть
+  document.querySelectorAll('p.error-message').forEach(function(elem) {
+    elem.remove();
+  });
   // Пройдёмся по всем полям
   for (var k = 0; k < inputs.length; k++) {
 
@@ -316,12 +316,12 @@ submit.addEventListener('click', function (evt) {
       var customValidityMessageForHTML = inputCustomValidation.getInvaliditiesForHTML();
       input.insertAdjacentHTML('afterend', '<p class="error-message">' + customValidityMessageForHTML + '</p>');
       var stopSubmit = true;
-
-    } // закончился if
-  } // закончился цикл
+    }
+  }
 
   if (stopSubmit) {
     evt.preventDefault();
+    CustomValidation.prototype.invalidities = [];// чтобы сообщения-записи об ошибках не наслаивались
   }
 });
 
