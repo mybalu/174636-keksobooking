@@ -3,6 +3,8 @@ var LANDLORD_COUNT = 8;// Число объектов недвижомости �
 var PIN_WIDTH = 50;// ширина пина, которым устанавливается положение объекта на карте
 var PIN_HEIGHT = 70;// высота пина, которым устанавливается положение объекта на карте
 var DEFAULT_ADDRESS = '570, 375';// координаты главного пина по умолчанию
+var ESC_KEYCODE = 27;
+// var ENTER_KEYCODE = 13;
 var generateAvatars = function () {
   var avatars = [];
   for (var i = 1; i <= LANDLORD_COUNT; i++) {
@@ -140,14 +142,13 @@ for (var i = 0; i < LANDLORD_COUNT; i++) {
 
 var currentAdressInput = document.getElementById('address');
 var setActivePage = function () {
-  allPins.appendChild(fragmentForAllPins);// вставляем пины в разметку
-  generatePopupCard(0);// отрисовываем первую popup карточку
-  map.classList.remove('map--faded');
-  formFieldset.forEach(function (currentValue) {
+  allPins.appendChild(fragmentForAllPins);// вставляем пины в фрагмент
+  map.classList.remove('map--faded');// активируем карту
+  formFieldset.forEach(function (currentValue) { // включаем поля формы
     currentValue.removeAttribute('disabled');
   });
-  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
-  currentAdressInput.value = DEFAULT_ADDRESS;
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');// включаем форму тоже
+  currentAdressInput.value = DEFAULT_ADDRESS;// адрес по умолчанию - где стоит пин центральный
 };
 // Получает координаты элемента в документе с учетом прокрутки
 var getCoords = function (elem) {
@@ -174,7 +175,6 @@ var deltaCoord = function (elem) {
   };
 };
 var moveElement = function (evt) {
-  // pinMain.style.zIndex = 100;
   pinMain.style.left = evt.pageX + deltaCoord(pinMain).x + 'px';
   pinMain.style.top = evt.pageY + deltaCoord(pinMain).y + 'px';
 };
@@ -195,3 +195,44 @@ var setCurrentAdress = function () {
 pinMain.addEventListener('mouseup', setActivePage);
 pinMain.addEventListener('mousedown', watchThePin);
 pinMain.addEventListener('mouseup', dontWatchDocument);
+
+var viewAllMapPins = function () {
+  return document.querySelectorAll('.map__pin');
+};
+
+// Нужно добавить обработчик на документ, чтобы он слушал клики
+// Если клик происходит по кнопке-пину, то отрисовывается карточка generatePopupCard(0);
+// Как определить, какая именно карточка должна рисоваться? Будем определять по номеру из src аватара
+// И также по клику на крестик карточка должна закрываться
+
+// Будет отрисовывать карточку по клику на пин
+var showCard = function (evt) {
+  // Проверим, что клик произошел на пине, но не главном.
+  if (evt.target.classList.contains('map__pin') && !evt.target.classList.contains('map__pin--main')) {
+    // Как узнать на какой именно карточке произошел клик? По номеру аватара можно. Достанем его.
+    var srcAvatar = evt.target.querySelector('img').getAttribute('src');
+    // И из строки возьмем цифры
+    var numberOfCard = parseFloat(srcAvatar.replace(/\D+/g, ''));
+    // И теперь отрисуем нужную карточку. -1 потому что нумерация массива не совпадает с нумерацией аватаров
+    generatePopupCard(numberOfCard - 1);
+  } else {
+    return;
+  }
+};
+
+var hideCard = function (evt) {
+  // Проверим, что клик произошел на крестике закрытия
+  if (evt.target.classList.contains('popup__close')) {
+    document.querySelector('section.map').querySelector('article').remove();
+  } else {
+    return;
+  }
+};
+
+document.addEventListener('click', showCard);
+document.addEventListener('click', hideCard);
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    hideCard();
+  }
+});
