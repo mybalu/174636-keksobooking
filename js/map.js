@@ -80,13 +80,13 @@ var similarCard = document.querySelector('template').content.querySelector('.map
 var similarMapPin = document.querySelector('template').content.querySelector('.map__pin');// Это шаблон кнопки-аватара
 var allPins = document.querySelector('.map__pins');// Это блок, куда нужно вставлять все-все готовые метки
 var fragmentForAllPins = document.createDocumentFragment();// Фрагмент, в который вставятся все пины
-var tempCard = function () {
-  return similarCard.cloneNode(true);// одно из описаний объекта аренды, весь блок <article class="map__card popup">
-};
+// var tempCard = function () {
+//   return similarCard.cloneNode(true);// одно из описаний объекта аренды, весь блок <article class="map__card popup">
+// };
 var offer = advertsTemplate.offer;// Это из объекта с данными.
 // Генерирует карточки из шаблона и объекта с данными
 var generatePopupCard = function (numberOfCard) {
-  var card = tempCard();
+  var card = similarCard.cloneNode(true);// одно из описаний объекта аренды, весь блок <article class="map__card popup">
   // карточка наполянется из объекта с данными
   card.querySelector('.popup__avatar').setAttribute('src', advertsTemplate.author.getAvatar[numberOfCard]);
   card.querySelector('.popup__title').textContent = offer.title[numberOfCard];
@@ -112,10 +112,7 @@ var generatePopupCard = function (numberOfCard) {
   var photoTemplate = card.querySelector('.popup__photo');// одно конкретное фото из предыдущего блока
   var photosData = offer.photos;// фотки из массива с данными
 
-  // Если фото уже есть, убираем их. Сейчас загрузим новые
-  while (photosBox.firstChild) {
-    photosBox.removeChild(photosBox.firstChild);
-  }
+  photosBox.removeChild(photoTemplate);// убираем то фото, что есть в шаблоне, сейчас свои загрузим туда
   toShuffleArr(photosData);
   for (var k = 0; k < photosData.length; k++) {
     var newImg = photosBox.appendChild(photoTemplate.cloneNode());
