@@ -1213,3 +1213,8 @@ fieldset {
       -ms-transform: translateX(-50%);
           transform: translateX(-50%);
 }
+
+.error-message {
+  font-style: italic;
+  color: #ff5635;
+}
