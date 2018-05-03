@@ -243,59 +243,69 @@ document.addEventListener('keydown', function (evt) {
 });
 
 // Валидация формы
-function CustomValidation() { }
+var CustomValidation = function () {};
+var getAttributeValue = function (elem, valueName) {
+  return elem.getAttribute(valueName);
+};
 
 CustomValidation.prototype = {
   // Установим пустой массив сообщений об ошибках
   invalidities: [],
-
   // Метод, проверяющий валидность
-  checkValidity: function(input) {
-
+  checkValidity: function (input) {
     var validity = input.validity;
 
-    if (validity.patternMismatch) {
-      this.addInvalidity('This is the wrong pattern for this field');
-    }
+    // это, кажется, не применяю
+    // if (validity.patternMismatch) {
+    //   this.addInvalidity('This is the wrong pattern for this field');
+    // }
 
     if (validity.rangeOverflow) {
       var max = getAttributeValue(input, 'max');
-      this.addInvalidity('The maximum value should be ' + max);
+      this.addInvalidity('Допустимая максимальная длина ' + max);
     }
-
     if (validity.rangeUnderflow) {
       var min = getAttributeValue(input, 'min');
-      this.addInvalidity('The minimum value should be ' + min);
+      this.addInvalidity('Допустимая минимальная длина ' + min);
     }
-
-    if (validity.stepMismatch) {
-      var step = getAttributeValue(input, 'step');
-      this.addInvalidity('This number needs to be a multiple of ' + step);
+    // это не использую?
+    // if (validity.stepMismatch) {
+    //   var step = getAttributeValue(input, 'step');
+    //   this.addInvalidity('Значение должно быть кратно ' + step);
+    // }
+    if (!validity.valueMissing) {
+      this.addInvalidity('Это поле обязательно для заполнения');
     }
-
-    // И остальные проверки валидности...
   },
 
   // Добавляем сообщение об ошибке в массив ошибок
-  addInvalidity: function(message) {
+  addInvalidity: function (message) {
     this.invalidities.push(message);
   },
 
   // Получаем общий текст сообщений об ошибках
-  getInvalidities: function() {
+  getInvalidities: function () {
     return this.invalidities.join('. \n');
   }
 };
 
-// Добавляем обработчик клика на кнопку отправки формы
-submit.addEventListener('click', function(e) {
-  // Пройдёмся по всем полям
-  for (var i = 0; i < inputs.length; i++) {
+// Будет писать каждую ошибку с новой строки
+CustomValidation.prototype.getInvaliditiesForHTML = function () {
+  return this.invalidities.join('. <br>');
+}
 
-    var input = inputs[i];
+// Добавляем обработчик клика на кнопку отправки формы
+var submit = document.querySelector('button[type="submit"]');
+var inputs = document.querySelectorAll('input');
+
+submit.addEventListener('click', function (evt) {
+  // Пройдёмся по всем полям
+  for (var k = 0; k < inputs.length; k++) {
+
+    var input = inputs[k];
 
     // Проверим валидность поля, используя встроенную в JavaScript функцию checkValidity()
-    if (input.checkValidity() == false) {
+    if (input.checkValidity() === false) {
 
       var inputCustomValidation = new CustomValidation(); // Создадим объект CustomValidation
       inputCustomValidation.checkValidity(input); // Выявим ошибки
@@ -311,6 +321,20 @@ submit.addEventListener('click', function(e) {
   } // закончился цикл
 
   if (stopSubmit) {
-    e.preventDefault();
+    evt.preventDefault();
   }
 });
+
+// Варианты стандартных сообщений валидации
+// input.validity = {
+//   valid: false // Поле валидно
+//   customError: false // Установленно специальное сообщение ошибки
+//   patternMismatch: false // Значение не удовлетворяет шаблону, установленному в атрибуте pattern
+//   rangeOverflow: false // Значение превосходит атрибут max
+//   rangeUnderflow: true // Значение меньше атрибута min
+//   stepMismatch: true // Значение не соответствует указаному шагу
+//   tooLong: false // Значение слишком длинное
+//   tooShort: false // Значение слишком короткое
+//   typeMismatch: false // Значение не соответствует указаному атрибуту type
+//   valueMissing: false // Отсутствует обязательное значение
+// };
