@@ -202,10 +202,19 @@ pinMain.addEventListener('mouseup', dontWatchDocument);
 // Будет отрисовывать карточку по клику на пин
 var showCard = function (evt) {
   // Проверим, что клик произошел на пине, но не главном.
-  if (evt.target.classList.contains('map__pin') && !evt.target.classList.contains('map__pin--main')) {
+  if ((evt.target.classList.contains('map__pin') || evt.target.parentNode.classList.contains('map__pin')) && (!evt.target.parentNode.classList.contains('map__pin--main') && !evt.target.classList.contains('map__pin--main'))) {
+    // Закроем прошлую карточку, если открыта
+    if (document.querySelector('section.map').querySelector('article')) {
+      document.querySelector('section.map').querySelector('article').remove();
+    }
     // Как узнать на какой именно карточке произошел клик? По номеру аватара можно. Достанем его.
-    var srcAvatar = evt.target.querySelector('img').getAttribute('src');
-    // И из строки возьмем цифры
+    if (evt.target.classList.contains('map__pin')) {
+      var srcAvatar = evt.target.querySelector('img').getAttribute('src');
+      // И из строки возьмем цифры
+    } else if (evt.target.parentNode.classList.contains('map__pin')) {
+      var srcAvatar = evt.target.getAttribute('src');
+      // И из строки возьмем цифры
+    }
     var numberOfCard = parseFloat(srcAvatar.replace(/\D+/g, ''));
     // И теперь отрисуем нужную карточку. -1 потому что нумерация массива не совпадает с нумерацией аватаров
     generatePopupCard(numberOfCard - 1);
@@ -214,6 +223,7 @@ var showCard = function (evt) {
   }
 };
 var hideCard = function (evt) {
+  console.log(evt.target);
   // Проверим, что клик произошел на крестике закрытия
   if (evt.target.classList.contains('popup__close')) {
     document.querySelector('section.map').querySelector('article').remove();
