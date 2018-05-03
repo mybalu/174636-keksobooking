@@ -214,6 +214,7 @@ var hideCard = function (evt) {
   // Проверим, что клик произошел на крестике закрытия
   if (evt.target.classList.contains('popup__close')) {
     document.querySelector('section.map').querySelector('article').remove();
+    pinMain.removeEventListener('mouseup', dontWatchDocument);
   } else {
     return;
   }
