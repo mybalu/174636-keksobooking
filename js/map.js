@@ -202,12 +202,14 @@ pinMain.addEventListener('mouseup', dontWatchDocument);
 // Будет отрисовывать карточку по клику на пин
 var showCard = function (evt) {
   // Проверим, что клик произошел на пине, но не главном.
+  // Эта странная конструкция в if из-за того, что FF в event.target отдает не самый глубокий вложенный элемент (аватар пина), а button, внутри которого уже сам аватар
   if ((evt.target.classList.contains('map__pin') || evt.target.parentNode.classList.contains('map__pin')) && (!evt.target.parentNode.classList.contains('map__pin--main') && !evt.target.classList.contains('map__pin--main'))) {
     // Закроем прошлую карточку, если открыта
     if (document.querySelector('section.map').querySelector('article')) {
       document.querySelector('section.map').querySelector('article').remove();
     }
     // Как узнать на какой именно карточке произошел клик? По номеру аватара можно. Достанем его.
+    // Эта странная конструкция if/else из-за того, что FF в event.target отдает не самый глубокий вложенный элемент (аватар пина), а button, внутри которого уже сам аватар
     if (evt.target.classList.contains('map__pin')) {
       var srcAvatar = evt.target.querySelector('img').getAttribute('src');
       // И из строки возьмем цифры
@@ -223,7 +225,6 @@ var showCard = function (evt) {
   }
 };
 var hideCard = function (evt) {
-  console.log(evt.target);
   // Проверим, что клик произошел на крестике закрытия
   if (evt.target.classList.contains('popup__close')) {
     document.querySelector('section.map').querySelector('article').remove();
