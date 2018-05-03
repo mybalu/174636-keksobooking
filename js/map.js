@@ -196,15 +196,6 @@ pinMain.addEventListener('mouseup', setActivePage);
 pinMain.addEventListener('mousedown', watchThePin);
 pinMain.addEventListener('mouseup', dontWatchDocument);
 
-var viewAllMapPins = function () {
-  return document.querySelectorAll('.map__pin');
-};
-
-// Нужно добавить обработчик на документ, чтобы он слушал клики
-// Если клик происходит по кнопке-пину, то отрисовывается карточка generatePopupCard(0);
-// Как определить, какая именно карточка должна рисоваться? Будем определять по номеру из src аватара
-// И также по клику на крестик карточка должна закрываться
-
 // Будет отрисовывать карточку по клику на пин
 var showCard = function (evt) {
   // Проверим, что клик произошел на пине, но не главном.
@@ -219,7 +210,6 @@ var showCard = function (evt) {
     return;
   }
 };
-
 var hideCard = function (evt) {
   // Проверим, что клик произошел на крестике закрытия
   if (evt.target.classList.contains('popup__close')) {
