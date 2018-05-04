@@ -209,12 +209,13 @@ var showCard = function (evt) {
       document.querySelector('section.map').querySelector('article').remove();
     }
     // Как узнать на какой именно карточке произошел клик? По номеру аватара можно. Достанем его.
+    var srcAvatar;// в завимости от браузера в event.target попадают разные вещи, потому ниже чехарда
     // Эта странная конструкция if/else из-за того, что FF в event.target отдает не самый глубокий вложенный элемент (аватар пина), а button, внутри которого уже сам аватар
     if (evt.target.classList.contains('map__pin')) {
-      var srcAvatar = evt.target.querySelector('img').getAttribute('src');
+      srcAvatar = evt.target.querySelector('img').getAttribute('src');
       // И из строки возьмем цифры
     } else if (evt.target.parentNode.classList.contains('map__pin')) {
-      var srcAvatar = evt.target.getAttribute('src');
+      srcAvatar = evt.target.getAttribute('src');
       // И из строки возьмем цифры
     }
     var numberOfCard = parseFloat(srcAvatar.replace(/\D+/g, ''));
@@ -271,8 +272,8 @@ CustomValidation.prototype = {
       var minlength = getAttributeValue(input, 'minlength');
       this.addInvalidity('Допустимая минимальная длина ' + minlength);
     }
-    if (!validity.valueMissing) {
-      this.addInvalidity('Это поле заполнено неверно либо не заполнено');
+    if (validity.valueMissing) {
+      this.addInvalidity('Это поле обязательно для заполнения');
     }
   },
   // Добавляем сообщение об ошибке в массив ошибок
@@ -290,20 +291,19 @@ CustomValidation.prototype.getInvaliditiesForHTML = function () {
   return this.invalidities.join('. <br>');
 };
 
-// Добавляем обработчик клика на кнопку отправки формы
 var submit = document.querySelector('button[type="submit"]');
 var inputs = document.querySelector('.ad-form').querySelectorAll('input');
 
+// Добавляем обработчик клика на кнопку отправки формы
 submit.addEventListener('click', function (evt) {
   // удалим старые сообщения об ошибках, если они есть
-  document.querySelectorAll('p.error-message').forEach(function(elem) {
+  document.querySelectorAll('p.error-message').forEach(function (elem) {
     elem.remove();
   });
   // Пройдёмся по всем полям
   for (var k = 0; k < inputs.length; k++) {
-
+    var stopSubmit;
     var input = inputs[k];
-
     // Проверим валидность поля, используя встроенную в JavaScript функцию checkValidity()
     if (input.checkValidity() === false) {
 
@@ -315,26 +315,13 @@ submit.addEventListener('click', function (evt) {
       // Добавим ошибки в документ
       var customValidityMessageForHTML = inputCustomValidation.getInvaliditiesForHTML();
       input.insertAdjacentHTML('afterend', '<p class="error-message">' + customValidityMessageForHTML + '</p>');
-      var stopSubmit = true;
+      CustomValidation.prototype.invalidities = [];// чтобы сообщения-записи об ошибках не наслаивались
+      stopSubmit = true;
+    } else {
+      stopSubmit = false;// без этого тоже будет false, конечно, но 1) неявно 2) если форма была заполнена с ошибками, а затем верно, то 2 раза кликать на отправку нужно будет
     }
   }
-
   if (stopSubmit) {
     evt.preventDefault();
-    CustomValidation.prototype.invalidities = [];// чтобы сообщения-записи об ошибках не наслаивались
   }
 });
-
-// Варианты стандартных сообщений валидации
-// input.validity = {
-//   valid: false // Поле валидно
-//   customError: false // Установленно специальное сообщение ошибки
-//   patternMismatch: false // Значение не удовлетворяет шаблону, установленному в атрибуте pattern
-//   rangeOverflow: false // Значение превосходит атрибут max
-//   rangeUnderflow: true // Значение меньше атрибута min
-//   stepMismatch: true // Значение не соответствует указаному шагу
-//   tooLong: false // Значение слишком длинное
-//   tooShort: false // Значение слишком короткое
-//   typeMismatch: false // Значение не соответствует указаному атрибуту type
-//   valueMissing: false // Отсутствует обязательное значение
-// };
