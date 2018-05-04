@@ -80,9 +80,6 @@ var similarCard = document.querySelector('template').content.querySelector('.map
 var similarMapPin = document.querySelector('template').content.querySelector('.map__pin');// Это шаблон кнопки-аватара
 var allPins = document.querySelector('.map__pins');// Это блок, куда нужно вставлять все-все готовые метки
 var fragmentForAllPins = document.createDocumentFragment();// Фрагмент, в который вставятся все пины
-// var tempCard = function () {
-//   return similarCard.cloneNode(true);// одно из описаний объекта аренды, весь блок <article class="map__card popup">
-// };
 var offer = advertsTemplate.offer;// Это из объекта с данными.
 // Генерирует карточки из шаблона и объекта с данными
 var generatePopupCard = function (numberOfCard) {
@@ -243,6 +240,37 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
+// Будет надо для валидации и синхронизация полей
+// Тип жилья
+var priceByHomeType = function () {
+  var homeTypeValue = document.getElementById('type').value;
+  var price = document.getElementById('price');
+  // Если останется время до допуска к защите, поменяю на объект
+  switch (homeTypeValue) {
+    case 'bungalo':
+      price.setAttribute('min', '0');
+      price.setAttribute('placeholder', '0');
+      break;
+    case 'flat':
+      price.setAttribute('min', '1000');
+      price.setAttribute('placeholder', '1000');
+      break;
+    case 'house':
+      price.setAttribute('min', '5000');
+      price.setAttribute('placeholder', '5000');
+      break;
+    case 'palace':
+      price.setAttribute('min', '10000');
+      price.setAttribute('placeholder', '10000');
+      break;
+  }
+};
+
+// Обработчик, который будет менять минимальную цену и placeholder
+var homeType = document.getElementById('type');
+homeType.addEventListener('change', priceByHomeType);
+
+
 // Валидация формы
 var CustomValidation = function () {};
 var getAttributeValue = function (elem, valueName) {
@@ -300,6 +328,7 @@ submit.addEventListener('click', function (evt) {
   document.querySelectorAll('p.error-message').forEach(function (elem) {
     elem.remove();
   });
+  priceByHomeType();
   // Пройдёмся по всем полям
   for (var k = 0; k < inputs.length; k++) {
     var stopSubmit;
