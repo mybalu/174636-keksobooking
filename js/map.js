@@ -302,12 +302,12 @@ var CustomValidation = function () {};
 var getAttributeValue = function (elem, valueName) {
   return elem.getAttribute(valueName);
 };
-var roomNumber = function () {
-  return document.getElementById('room_number');
-};
-var capacity = function () {
-  return document.getElementById('capacity');
-};
+// var roomNumber = function () {
+//   return document.getElementById('room_number');
+// };
+// var capacity = function () {
+//   return document.getElementById('capacity');
+// };
 CustomValidation.prototype = {
   // Установим пустой массив сообщений об ошибках
   invalidities: [],
@@ -334,18 +334,18 @@ CustomValidation.prototype = {
     if (validity.valueMissing) {
       this.addInvalidity('Это поле обязательно для заполнения');
     }
-    if (roomNumber().value === '1' && capacity().value !== '1') {
-      this.addInvalidity('Сюда можно приглашать 1 гостя, отметьте это, пожалуйста');
-    }
-    if (roomNumber().value === '2' && (capacity().value !== '1' || capacity().value !== '2')) {
-      this.addInvalidity('Сюда можно приглашать 1 или 2 гостей, отметьте это, пожалуйста');
-    }
-    if (roomNumber().value === '3' && (capacity().value !== '1' || capacity().value !== '2' || capacity().value !== '3')) {
-      this.addInvalidity('Сюда можно приглашать 1, 2 или 3 гостей, отметьте это, пожалуйста');
-    }
-    if (roomNumber().value === '100' && capacity().value !== '0') {
-      this.addInvalidity('Гости? Вы серьезно? Это не для них. Отметьте это, будьте добры');
-    }
+    // if (roomNumber().value === '1' && capacity().value !== '1') {
+    //   this.addInvalidity('Сюда можно приглашать 1 гостя, отметьте это, пожалуйста');
+    // }
+    // if (roomNumber().value === '2' && (capacity().value !== '1' || capacity().value !== '2')) {
+    //   this.addInvalidity('Сюда можно приглашать 1 или 2 гостей, отметьте это, пожалуйста');
+    // }
+    // if (roomNumber().value === '3' && (capacity().value !== '1' || capacity().value !== '2' || capacity().value !== '3')) {
+    //   this.addInvalidity('Сюда можно приглашать 1, 2 или 3 гостей, отметьте это, пожалуйста');
+    // }
+    // if (roomNumber().value === '100' && capacity().value !== '0') {
+    //   this.addInvalidity('Гости? Вы серьезно? Это не для них. Отметьте это, будьте добры');
+    // }
   },
 
   // Добавляем сообщение об ошибке в массив ошибок
@@ -365,6 +365,7 @@ CustomValidation.prototype.getInvaliditiesForHTML = function () {
 
 var submit = document.querySelector('button[type="submit"]');
 var inputs = document.querySelector('.ad-form').querySelectorAll('input');
+
 
 // Добавляем обработчик клика на кнопку отправки формы
 submit.addEventListener('click', function (evt) {
@@ -398,3 +399,42 @@ submit.addEventListener('click', function (evt) {
     evt.preventDefault();
   }
 });
+var roomNumber = function () {
+  return document.getElementById('room_number');
+};
+var capacity = function () {
+  return document.getElementById('capacity');
+};
+
+var checkCapacity = function (evt) {
+  if (capacity().querySelector('p')) {
+    capacity().querySelector('p').remove();
+    capacity().style.borderColor = '#d9d9d3';
+  }
+  var errorMessage = '';
+  if (roomNumber().value === '1' && capacity().value !== '1') {
+    errorMessage = 'Сюда можно приглашать 1 гостя, отметьте это, пожалуйста';
+    evt.preventDefault();
+  }
+  if (roomNumber().value === '2' && (capacity().value !== '1' && capacity().value !== '2')) {
+    errorMessage = 'Сюда можно приглашать 1 или 2 гостей, отметьте это, пожалуйста';
+    evt.preventDefault();
+  }
+  if (roomNumber().value === '3' && (capacity().value !== '1' && capacity().value !== '2' && capacity().value !== '3')) {
+    errorMessage = 'Сюда можно приглашать 1, 2 или 3 гостей, отметьте это, пожалуйста';
+    evt.preventDefault();
+  }
+  if (roomNumber().value === '100' && capacity().value !== '0') {
+    errorMessage = 'Гости? Вы серьезно? Это не для них. Отметьте это, будьте добры';
+    evt.preventDefault();
+  }
+
+  // В зависимости от результатов проверки вставляем <p class="error-message"> или нет.
+  if (errorMessage !== '') {
+    capacity().insertAdjacentHTML('afterend', '<p class="error-message">' + errorMessage + '</p>');
+    capacity().style.borderColor = '#ffaa99';
+  }
+};
+
+roomNumber().addEventListener('change', checkCapacity);
+submit.addEventListener('click', checkCapacity);
