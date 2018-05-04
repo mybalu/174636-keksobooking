@@ -1,5 +1,5 @@
 'use strict';
-window.data = (function () {
+window.form = (function () {
   return {
 
   };
