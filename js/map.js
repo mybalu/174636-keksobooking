@@ -105,7 +105,7 @@ var showCard = function (evt) {
     }
     var numberOfCard = parseFloat(srcAvatar.replace(/\D+/g, ''));
     // И теперь отрисуем нужную карточку. -1 потому что нумерация массива не совпадает с нумерацией аватаров
-    generatePopupCard(numberOfCard - 1);
+    window.card.generatePopupCard(numberOfCard - 1);
   } else {
     return;
   }
