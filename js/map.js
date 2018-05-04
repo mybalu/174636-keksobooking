@@ -298,6 +298,7 @@ timeOutInput.addEventListener('change', sincTimeOutIn);
 
 
 // Валидация формы
+var addressInput = document.getElementById('address');
 var CustomValidation = function () {};
 var getAttributeValue = function (elem, valueName) {
   return elem.getAttribute(valueName);
@@ -332,7 +333,11 @@ CustomValidation.prototype = {
       this.addInvalidity('Допустимая минимальная длина ' + minlength);
     }
     if (validity.valueMissing) {
-      this.addInvalidity('Это поле обязательно для заполнения');
+      if (input.getAttribute('id') === 'address') {
+        this.addInvalidity('Установите метку на карте для задания адреса');
+      } else {
+        this.addInvalidity('Это поле обязательно для заполнения');
+      }
     }
     // if (roomNumber().value === '1' && capacity().value !== '1') {
     //   this.addInvalidity('Сюда можно приглашать 1 гостя, отметьте это, пожалуйста');
