@@ -266,9 +266,35 @@ var priceByHomeType = function () {
   }
 };
 
+// Время въезда = времени выезда
+var sincTimeInOut = function () {
+  var timeIn = document.getElementById('timein');
+  var timeOut = document.getElementById('timeout');
+  if (timeIn.selectedIndex !== timeOut.selectedIndex) {
+    timeOut.selectedIndex = timeIn.selectedIndex;
+  } else {
+    return;
+  }
+};
+// Время выезда = времени въезда, другим способом)
+var sincTimeOutIn = function () {
+  var timeIn = document.getElementById('timein');
+  var timeOut = document.getElementById('timeout');
+  if (timeIn.value !== timeOut.value) {
+    timeIn.value = timeOut.value;
+  } else {
+    return;
+  }
+};
 // Обработчик, который будет менять минимальную цену и placeholder
 var homeType = document.getElementById('type');
 homeType.addEventListener('change', priceByHomeType);
+
+// Обработчики, которые будут синхронизировать время заезда/выезда
+var timeInInput = document.getElementById('timein');
+var timeOutInput = document.getElementById('timeout');
+timeInInput.addEventListener('change', sincTimeInOut);
+timeOutInput.addEventListener('change', sincTimeOutIn);
 
 
 // Валидация формы
