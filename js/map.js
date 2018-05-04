@@ -1,13 +1,7 @@
 'use strict';
-var LANDLORD_COUNT = 8;// Число объектов недвижомости для сдачи
-var PIN_WIDTH = 50;// ширина пина, которым устанавливается положение объекта на карте
-var PIN_HEIGHT = 70;// высота пина, которым устанавливается положение объекта на карте
-var DEFAULT_ADDRESS = '570, 375';// координаты главного пина по умолчанию
-var ESC_KEYCODE = 27;
-// var ENTER_KEYCODE = 13;
 var generateAvatars = function () {
   var avatars = [];
-  for (var i = 1; i <= LANDLORD_COUNT; i++) {
+  for (var i = 1; i <= window.consts.LANDLORD_COUNT; i++) {
     var avatarInThisCycle;
 
     // блок if на случай, если аватарок будет больше 10
@@ -121,8 +115,8 @@ var generatePopupCard = function (numberOfCard) {
 // Генерирует пины из шаблона и объекта с данными
 var generateMapPin = function (avatarArr) {
   var mapPin = similarMapPin.cloneNode(true);// это пин <button type="button" class="map__pin" style="..."><img src="..." width="40" height="40" draggable="false" alt="..."></button>
-  var mapPinSpearheadPositionX = PIN_WIDTH / 2;// вычисляем, где находится острие метки в зависимости от ее размеров
-  var mapPinSpearheadPositionY = PIN_HEIGHT;// вычисляем, где находится острие метки в зависимости от ее размеров
+  var mapPinSpearheadPositionX = window.consts.PIN_WIDTH / 2;// вычисляем, где находится острие метки в зависимости от ее размеров
+  var mapPinSpearheadPositionY = window.consts.PIN_HEIGHT;// вычисляем, где находится острие метки в зависимости от ее размеров
   // устанавливаем координаты меток
   var coordinate = advertsTemplate.location;
   var coordinateX = coordinate.getX() - mapPinSpearheadPositionX + 'px';
@@ -136,7 +130,7 @@ var generateMapPin = function (avatarArr) {
 };
 
 // Генерируем пины
-for (var i = 0; i < LANDLORD_COUNT; i++) {
+for (var i = 0; i < window.consts.LANDLORD_COUNT; i++) {
   generateMapPin(advertsTemplate.author.getAvatar[i]);
 }
 
@@ -148,7 +142,7 @@ var setActivePage = function () {
     currentValue.removeAttribute('disabled');
   });
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');// включаем форму тоже
-  currentAdressInput.value = DEFAULT_ADDRESS;// адрес по умолчанию - где стоит пин центральный
+  currentAdressInput.value = window.consts.DEFAULT_ADDRESS;// адрес по умолчанию - где стоит пин центральный
 };
 // Получает координаты элемента в документе с учетом прокрутки
 var getCoords = function (elem) {
@@ -235,7 +229,7 @@ var hideCard = function (evt) {
 document.addEventListener('click', showCard);
 document.addEventListener('click', hideCard);
 document.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  if (evt.keyCode === window.consts.ESC_KEYCODE) {
     hideCard();
   }
 });
