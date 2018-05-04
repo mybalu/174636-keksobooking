@@ -80,9 +80,6 @@ var similarCard = document.querySelector('template').content.querySelector('.map
 var similarMapPin = document.querySelector('template').content.querySelector('.map__pin');// Это шаблон кнопки-аватара
 var allPins = document.querySelector('.map__pins');// Это блок, куда нужно вставлять все-все готовые метки
 var fragmentForAllPins = document.createDocumentFragment();// Фрагмент, в который вставятся все пины
-// var tempCard = function () {
-//   return similarCard.cloneNode(true);// одно из описаний объекта аренды, весь блок <article class="map__card popup">
-// };
 var offer = advertsTemplate.offer;// Это из объекта с данными.
 // Генерирует карточки из шаблона и объекта с данными
 var generatePopupCard = function (numberOfCard) {
@@ -202,17 +199,20 @@ pinMain.addEventListener('mouseup', dontWatchDocument);
 // Будет отрисовывать карточку по клику на пин
 var showCard = function (evt) {
   // Проверим, что клик произошел на пине, но не главном.
+  // Эта странная конструкция в if из-за того, что FF в event.target отдает не самый глубокий вложенный элемент (аватар пина), а button, внутри которого уже сам аватар
   if ((evt.target.classList.contains('map__pin') || evt.target.parentNode.classList.contains('map__pin')) && (!evt.target.parentNode.classList.contains('map__pin--main') && !evt.target.classList.contains('map__pin--main'))) {
     // Закроем прошлую карточку, если открыта
     if (document.querySelector('section.map').querySelector('article')) {
       document.querySelector('section.map').querySelector('article').remove();
     }
     // Как узнать на какой именно карточке произошел клик? По номеру аватара можно. Достанем его.
+    var srcAvatar;// в завимости от браузера в event.target попадают разные вещи, потому ниже чехарда
+    // Эта странная конструкция if/else из-за того, что FF в event.target отдает не самый глубокий вложенный элемент (аватар пина), а button, внутри которого уже сам аватар
     if (evt.target.classList.contains('map__pin')) {
-      var srcAvatar = evt.target.querySelector('img').getAttribute('src');
+      srcAvatar = evt.target.querySelector('img').getAttribute('src');
       // И из строки возьмем цифры
     } else if (evt.target.parentNode.classList.contains('map__pin')) {
-      var srcAvatar = evt.target.getAttribute('src');
+      srcAvatar = evt.target.getAttribute('src');
       // И из строки возьмем цифры
     }
     var numberOfCard = parseFloat(srcAvatar.replace(/\D+/g, ''));
@@ -223,7 +223,6 @@ var showCard = function (evt) {
   }
 };
 var hideCard = function (evt) {
-  console.log(evt.target);
   // Проверим, что клик произошел на крестике закрытия
   if (evt.target.classList.contains('popup__close')) {
     document.querySelector('section.map').querySelector('article').remove();
@@ -240,3 +239,202 @@ document.addEventListener('keydown', function (evt) {
     hideCard();
   }
 });
+
+// Будет надо для валидации и синхронизация полей
+// Тип жилья
+var priceByHomeType = function () {
+  var homeTypeValue = document.getElementById('type').value;
+  var price = document.getElementById('price');
+  // Если останется время до допуска к защите, поменяю на объект
+  switch (homeTypeValue) {
+    case 'bungalo':
+      price.setAttribute('min', '0');
+      price.setAttribute('placeholder', '0');
+      break;
+    case 'flat':
+      price.setAttribute('min', '1000');
+      price.setAttribute('placeholder', '1000');
+      break;
+    case 'house':
+      price.setAttribute('min', '5000');
+      price.setAttribute('placeholder', '5000');
+      break;
+    case 'palace':
+      price.setAttribute('min', '10000');
+      price.setAttribute('placeholder', '10000');
+      break;
+  }
+};
+
+// Время въезда = времени выезда
+var sincTimeInOut = function () {
+  var timeIn = document.getElementById('timein');
+  var timeOut = document.getElementById('timeout');
+  if (timeIn.selectedIndex !== timeOut.selectedIndex) {
+    timeOut.selectedIndex = timeIn.selectedIndex;
+  } else {
+    return;
+  }
+};
+// Время выезда = времени въезда, другим способом)
+var sincTimeOutIn = function () {
+  var timeIn = document.getElementById('timein');
+  var timeOut = document.getElementById('timeout');
+  if (timeIn.value !== timeOut.value) {
+    timeIn.value = timeOut.value;
+  } else {
+    return;
+  }
+};
+// Обработчик, который будет менять минимальную цену и placeholder
+var homeType = document.getElementById('type');
+homeType.addEventListener('change', priceByHomeType);
+
+// Обработчики, которые будут синхронизировать время заезда/выезда
+var timeInInput = document.getElementById('timein');
+var timeOutInput = document.getElementById('timeout');
+timeInInput.addEventListener('change', sincTimeInOut);
+timeOutInput.addEventListener('change', sincTimeOutIn);
+
+
+// Валидация формы
+var CustomValidation = function () {};
+var getAttributeValue = function (elem, valueName) {
+  return elem.getAttribute(valueName);
+};
+// var roomNumber = function () {
+//   return document.getElementById('room_number');
+// };
+// var capacity = function () {
+//   return document.getElementById('capacity');
+// };
+CustomValidation.prototype = {
+  // Установим пустой массив сообщений об ошибках
+  invalidities: [],
+  // Метод, проверяющий валидность
+  checkValidity: function (input) {
+    var validity = input.validity;
+
+    if (validity.rangeOverflow) {
+      var max = getAttributeValue(input, 'max');
+      this.addInvalidity('Допустимая максимальная величина ' + max);
+    }
+    if (validity.rangeUnderflow) {
+      var min = getAttributeValue(input, 'min');
+      this.addInvalidity('Допустимая минимальная величина ' + min);
+    }
+    if (validity.tooLong) {
+      var maxlength = getAttributeValue(input, 'maxlength');
+      this.addInvalidity('Допустимая максимальная длина ' + maxlength);
+    }
+    if (validity.tooShort) {
+      var minlength = getAttributeValue(input, 'minlength');
+      this.addInvalidity('Допустимая минимальная длина ' + minlength);
+    }
+    if (validity.valueMissing) {
+      this.addInvalidity('Это поле обязательно для заполнения');
+    }
+    // if (roomNumber().value === '1' && capacity().value !== '1') {
+    //   this.addInvalidity('Сюда можно приглашать 1 гостя, отметьте это, пожалуйста');
+    // }
+    // if (roomNumber().value === '2' && (capacity().value !== '1' || capacity().value !== '2')) {
+    //   this.addInvalidity('Сюда можно приглашать 1 или 2 гостей, отметьте это, пожалуйста');
+    // }
+    // if (roomNumber().value === '3' && (capacity().value !== '1' || capacity().value !== '2' || capacity().value !== '3')) {
+    //   this.addInvalidity('Сюда можно приглашать 1, 2 или 3 гостей, отметьте это, пожалуйста');
+    // }
+    // if (roomNumber().value === '100' && capacity().value !== '0') {
+    //   this.addInvalidity('Гости? Вы серьезно? Это не для них. Отметьте это, будьте добры');
+    // }
+  },
+
+  // Добавляем сообщение об ошибке в массив ошибок
+  addInvalidity: function (message) {
+    this.invalidities.push(message);
+  },
+  // Получаем общий текст сообщений об ошибках
+  getInvalidities: function () {
+    return this.invalidities.join('. \n');
+  }
+};
+
+// Будет писать каждую ошибку с новой строки
+CustomValidation.prototype.getInvaliditiesForHTML = function () {
+  return this.invalidities.join('. <br>');
+};
+
+var submit = document.querySelector('button[type="submit"]');
+var inputs = document.querySelector('.ad-form').querySelectorAll('input');
+
+
+// Добавляем обработчик клика на кнопку отправки формы
+submit.addEventListener('click', function (evt) {
+  // удалим старые сообщения об ошибках, если они есть
+  document.querySelectorAll('p.error-message').forEach(function (elem) {
+    elem.remove();
+  });
+  priceByHomeType();
+  // Пройдёмся по всем полям
+  for (var k = 0; k < inputs.length; k++) {
+    var stopSubmit;
+    var input = inputs[k];
+    // Проверим валидность поля, используя встроенную в JavaScript функцию checkValidity()
+    if (input.checkValidity() === false) {
+
+      var inputCustomValidation = new CustomValidation(); // Создадим объект CustomValidation
+      inputCustomValidation.checkValidity(input); // Выявим ошибки
+      var customValidityMessage = inputCustomValidation.getInvalidities(); // Получим все сообщения об ошибках
+      input.setCustomValidity(customValidityMessage); // Установим специальное сообщение об ошибке
+
+      // Добавим ошибки в документ
+      var customValidityMessageForHTML = inputCustomValidation.getInvaliditiesForHTML();
+      input.insertAdjacentHTML('afterend', '<p class="error-message">' + customValidityMessageForHTML + '</p>');
+      CustomValidation.prototype.invalidities = [];// чтобы сообщения-записи об ошибках не наслаивались
+      stopSubmit = true;
+    } else {
+      stopSubmit = false;// без этого тоже будет false, конечно, но 1) неявно 2) если форма была заполнена с ошибками, а затем верно, то 2 раза кликать на отправку нужно будет
+    }
+  }
+  if (stopSubmit) {
+    evt.preventDefault();
+  }
+});
+var roomNumber = function () {
+  return document.getElementById('room_number');
+};
+var capacity = function () {
+  return document.getElementById('capacity');
+};
+
+var checkCapacity = function (evt) {
+  if (capacity().querySelector('p')) {
+    capacity().querySelector('p').remove();
+    capacity().style.borderColor = '#d9d9d3';
+  }
+  var errorMessage = '';
+  if (roomNumber().value === '1' && capacity().value !== '1') {
+    errorMessage = 'Сюда можно приглашать 1 гостя, отметьте это, пожалуйста';
+    evt.preventDefault();
+  }
+  if (roomNumber().value === '2' && (capacity().value !== '1' && capacity().value !== '2')) {
+    errorMessage = 'Сюда можно приглашать 1 или 2 гостей, отметьте это, пожалуйста';
+    evt.preventDefault();
+  }
+  if (roomNumber().value === '3' && (capacity().value !== '1' && capacity().value !== '2' && capacity().value !== '3')) {
+    errorMessage = 'Сюда можно приглашать 1, 2 или 3 гостей, отметьте это, пожалуйста';
+    evt.preventDefault();
+  }
+  if (roomNumber().value === '100' && capacity().value !== '0') {
+    errorMessage = 'Гости? Вы серьезно? Это не для них. Отметьте это, будьте добры';
+    evt.preventDefault();
+  }
+
+  // В зависимости от результатов проверки вставляем <p class="error-message"> или нет.
+  if (errorMessage !== '') {
+    capacity().insertAdjacentHTML('afterend', '<p class="error-message">' + errorMessage + '</p>');
+    capacity().style.borderColor = '#ffaa99';
+  }
+};
+
+roomNumber().addEventListener('change', checkCapacity);
+submit.addEventListener('click', checkCapacity);
