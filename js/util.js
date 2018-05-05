@@ -1,4 +1,5 @@
 'use strict';
+
 window.util = (function () {
   return {
     giveMeRandom: function (min, max) {

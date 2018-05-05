@@ -1,4 +1,5 @@
 'use strict';
+
 window.pin = (function () {
   // Генерирует пины из шаблона и объекта с данными
   var fragmentForAllPins = document.createDocumentFragment();// Фрагмент, в который вставятся все пины

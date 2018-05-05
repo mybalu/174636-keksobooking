@@ -1,4 +1,5 @@
 'use strict';
+
 window.card = (function () {
   var similarCard = document.querySelector('template').content.querySelector('.map__card.popup');// Это шаблон поп-апа карточки
   var offer = window.data.advertsTemplate.offer;// Это из объекта с данными.

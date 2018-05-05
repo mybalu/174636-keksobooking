@@ -1,4 +1,5 @@
 'use strict';
+
 window.data = (function () {
   var generateAvatars = function () {
     var avatars = [];

@@ -1,4 +1,5 @@
 'use strict';
+
 window.consts = (function () {
   return {
     LANDLORD_COUNT: 8, // Число объектов недвижомости для сдачи
