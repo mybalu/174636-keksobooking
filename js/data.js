@@ -1,6 +1,7 @@
 'use strict';
 
 window.data = (function () {
+  window.load(window.consts.DATA_URL, window.util.giveData, window.util.showError);
   var generateAvatars = function () {
     var avatars = [];
     for (var i = 1; i <= window.consts.LANDLORD_COUNT; i++) {

@@ -18,6 +18,12 @@ window.util = (function () {
         arr[arr.length - 1] = tempVar;
       }
       return arr;
+    },
+    showError: function (message) {
+      return console.error(message);
+    },
+    giveData: function (data) {
+    return console.log(data);
     }
   };
 })();
