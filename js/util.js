@@ -22,12 +22,8 @@ window.util = (function () {
     showError: function (message) {
       return console.error(message);
     },
-    giveData: function (data) {
-      console.log(data);
-    },
     giveTestData: function (data) {
       return console.log(data);
     }
   };
-  window.load(window.consts.DATA_URL, window.util.giveData, window.util.showError);
 })();

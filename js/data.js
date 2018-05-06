@@ -1,21 +1,20 @@
 'use strict';
 
 window.data = (function () {
-  var ads = window.load(window.consts.DATA_URL, window.util.giveData, window.util.showError);
-  // window.load(window.consts.DATA_URL, window.util.giveTestData, window.util.showError);// удалить из продакшн-ветки
-  var generateAvatars = function () {
+  var generateAvatars = function (ads) {
+    console.log(ads);
     var avatars = [];
-    for (var i = 0; i <= ads.length; i++) {
+    for (var i = 0; i < ads.length; i++) {
       var avatarInThisCycle = ads[i].author.avatar;
 
       avatars.push(avatarInThisCycle);
     }
     return avatars;
-  }();
+  };
   return {
     advertsTemplate: {
       'author': {
-        getAvatar: generateAvatars
+        getAvatar: window.load(window.consts.DATA_URL, generateAvatars, window.util.showError)
       },
       'offer': {
         'title': ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'],
