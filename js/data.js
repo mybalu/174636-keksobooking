@@ -1,18 +1,13 @@
 'use strict';
 
 window.data = (function () {
-  window.load(window.consts.DATA_URL, window.util.giveData, window.util.showError);
+  var ads = window.load(window.consts.DATA_URL, window.util.giveData, window.util.showError);
+  // window.load(window.consts.DATA_URL, window.util.giveTestData, window.util.showError);// удалить из продакшн-ветки
   var generateAvatars = function () {
     var avatars = [];
-    for (var i = 1; i <= window.consts.LANDLORD_COUNT; i++) {
-      var avatarInThisCycle;
+    for (var i = 0; i <= ads.length; i++) {
+      var avatarInThisCycle = ads[i].author.avatar;
 
-      // блок if на случай, если аватарок будет больше 10
-      if (i < 10) {
-        avatarInThisCycle = 'img/avatars/user0' + i + '.png';
-      } else {
-        avatarInThisCycle = 'img/avatars/user' + i + '.png';
-      }
       avatars.push(avatarInThisCycle);
     }
     return avatars;

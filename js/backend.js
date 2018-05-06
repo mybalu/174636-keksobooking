@@ -79,7 +79,7 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 10000; // 10s
+    xhr.timeout = window.consts.TIMEOUT;
 
     xhr.open('GET', url);
     xhr.send();
@@ -167,7 +167,4 @@
   //   xhr.open('GET', url);
   //   xhr.send();
   // };
-
-  // var URL = 'https://js.dump.academy/keksobooking/data';
-  // window.load(URL, onLoad, onError);
 })();

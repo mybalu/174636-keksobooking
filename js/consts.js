@@ -7,7 +7,8 @@ window.consts = (function () {
     PIN_HEIGHT: 70, // высота пина, которым устанавливается положение объекта на карте
     DEFAULT_ADDRESS: '570, 375', // координаты главного пина по умолчанию
     ESC_KEYCODE: 27,
-    ENTER_KEYCODE: 13,// Нигде не используется?
-    DATA_URL: 'https://js.dump.academy/keksobooking/data'
+    ENTER_KEYCODE: 13, // Нигде не используется?
+    DATA_URL: 'https://js.dump.academy/keksobooking/data', // тут инфа по объявлениям
+    TIMEOUT: 10000 // 10 секунд, таймаут для xhr
   };
 })();

@@ -23,7 +23,11 @@ window.util = (function () {
       return console.error(message);
     },
     giveData: function (data) {
-    return console.log(data);
+      console.log(data);
+    },
+    giveTestData: function (data) {
+      return console.log(data);
     }
   };
+  window.load(window.consts.DATA_URL, window.util.giveData, window.util.showError);
 })();
