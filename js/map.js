@@ -70,17 +70,15 @@
       if (document.querySelector('section.map').querySelector('article')) {
         document.querySelector('section.map').querySelector('article').remove();
       }
-      // Как узнать на какой именно карточке произошел клик? По номеру аватара можно. Достанем его.
-      var srcAvatar;// в завимости от браузера в event.target попадают разные вещи, потому ниже чехарда
+      // Как узнать на какой именно карточке произошел клик? Никак. Потому позаботимся об этом и проставим пинам атрибуты data-index.
       // Эта странная конструкция if/else из-за того, что FF в event.target отдает не самый глубокий вложенный элемент (аватар пина), а button, внутри которого уже сам аватар
+      var numberOfCard;
       if (evt.target.classList.contains('map__pin')) {
-        srcAvatar = evt.target.querySelector('img').getAttribute('src');
+        numberOfCard = evt.target.dataset.index;
       } else if (evt.target.parentNode.classList.contains('map__pin')) {
-        srcAvatar = evt.target.getAttribute('src');
+        numberOfCard = evt.target.parentNode.dataset.index;
       }
-      var numberOfCard = parseFloat(srcAvatar.replace(/\D+/g, ''));
-      // И теперь отрисуем нужную карточку. -1 потому что нумерация массива не совпадает с нумерацией аватаров
-      window.card.generatePopupCard(numberOfCard);
+      window.card.generatePopupCard(numberOfCard);// И теперь отрисуем нужную карточку. -1 потому что нумерация массива не совпадает с нумерацией аватаров
     } else {
       return;
     }

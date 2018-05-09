@@ -4,7 +4,7 @@ window.pin = (function () {
   // Генерирует пины из шаблона и объекта с данными
   var fragmentForAllPins = document.createDocumentFragment();// Фрагмент, в который вставятся все пины
   var similarMapPin = document.querySelector('template').content.querySelector('.map__pin');// Это шаблон кнопки-аватара
-  var generateMapPin = function (author) {
+  var generateMapPin = function (author, numberOfPin) {
     var mapPin = similarMapPin.cloneNode(true);// это пин <button type="button" class="map__pin" style="..."><img src="..." width="40" height="40" draggable="false" alt="..."></button>
     var mapPinSpearheadPositionX = window.consts.PIN_WIDTH / 2;// вычисляем, где находится острие метки в зависимости от ее размеров
     var mapPinSpearheadPositionY = window.consts.PIN_HEIGHT;// вычисляем, где находится острие метки в зависимости от ее размеров
@@ -15,6 +15,7 @@ window.pin = (function () {
     mapPin.style.left = coordinateX;
     mapPin.style.top = coordinateY;
     mapPin.querySelector('img').setAttribute('src', author.author.avatar);// аватары авторов на кнопке-пине тоже отрисуем)
+    mapPin.setAttribute('data-index', numberOfPin);// добавим атрибут индекса, чтобы связывать пин с карточкой, которая будет отрисовываться в дальнейшем
     // Вставляем сделанный пин в фрагмент
     fragmentForAllPins.appendChild(mapPin);
   };
@@ -22,7 +23,7 @@ window.pin = (function () {
   // Генерируем пины
   window.load(window.consts.DATA_URL, function (ads) {
     for (var i = 0; i < ads.length; i++) {
-      generateMapPin(ads[i]);
+      generateMapPin(ads[i], i);
     }
   }, window.util.showError);
   return fragmentForAllPins;
