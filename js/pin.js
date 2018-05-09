@@ -24,7 +24,6 @@ window.pin = (function () {
     for (var i = 0; i < ads.length; i++) {
       generateMapPin(ads[i]);
     }
-    return fragmentForAllPins;
   }, window.util.showError);
   return fragmentForAllPins;
 })();
