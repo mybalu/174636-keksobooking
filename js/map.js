@@ -7,7 +7,10 @@
   var pinMain = map.querySelector('.map__pin--main');
   var allPins = document.querySelector('.map__pins');// Это блок, куда нужно вставлять все-все готовые метки
   var setActivePage = function () {
+    // window.load(window.consts.DATA_URL, generateAvatars, window.util.showError);
+    // тут вызывать данные с сервера
     allPins.appendChild(window.pin);// вставляем пины в фрагмент
+    console.log(window.pin);
     map.classList.remove('map--faded');// активируем карту
     formFieldset.forEach(function (currentValue) { // включаем поля формы
       currentValue.removeAttribute('disabled');
