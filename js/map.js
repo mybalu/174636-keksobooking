@@ -7,10 +7,7 @@
   var pinMain = map.querySelector('.map__pin--main');
   var allPins = document.querySelector('.map__pins');// Это блок, куда нужно вставлять все-все готовые метки
   var setActivePage = function () {
-    // window.load(window.consts.DATA_URL, generateAvatars, window.util.showError);
-    // тут вызывать данные с сервера
     allPins.appendChild(window.pin);// вставляем пины в фрагмент
-    console.log(window.pin);
     map.classList.remove('map--faded');// активируем карту
     formFieldset.forEach(function (currentValue) { // включаем поля формы
       currentValue.removeAttribute('disabled');
@@ -78,14 +75,12 @@
       // Эта странная конструкция if/else из-за того, что FF в event.target отдает не самый глубокий вложенный элемент (аватар пина), а button, внутри которого уже сам аватар
       if (evt.target.classList.contains('map__pin')) {
         srcAvatar = evt.target.querySelector('img').getAttribute('src');
-        // И из строки возьмем цифры
       } else if (evt.target.parentNode.classList.contains('map__pin')) {
         srcAvatar = evt.target.getAttribute('src');
-        // И из строки возьмем цифры
       }
       var numberOfCard = parseFloat(srcAvatar.replace(/\D+/g, ''));
       // И теперь отрисуем нужную карточку. -1 потому что нумерация массива не совпадает с нумерацией аватаров
-      window.card.generatePopupCard(numberOfCard - 1);
+      window.card.generatePopupCard(numberOfCard);
     } else {
       return;
     }
