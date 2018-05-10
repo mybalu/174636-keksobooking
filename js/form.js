@@ -183,4 +183,16 @@
 
   roomNumber().addEventListener('change', checkCapacity);
   submit.addEventListener('click', checkCapacity);
+
+  // Отправка данных на сервер по XHR
+  var form = document.querySelector('form.ad-form');
+
+  form.addEventListener('submit', function (evt) {
+    window.send(new FormData(form), function (response) {
+      console.log('Отправка прошла успешно! ' + response);
+    }, function () {
+      console.log('Что-то пошло не так: ' + xhr.status + ' ' + xhr.statusText);
+    });
+    evt.preventDefault();
+  });
 })();
