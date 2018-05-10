@@ -190,9 +190,7 @@
   form.addEventListener('submit', function (evt) {
     window.send(new FormData(form), function (response) {
       console.log('Отправка прошла успешно! ' + response);
-    }, function () {
-      console.log('Что-то пошло не так: ' + xhr.status + ' ' + xhr.statusText);
-    });
+    }, window.util.showError);
     evt.preventDefault();
   });
 })();

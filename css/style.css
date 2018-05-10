@@ -1218,3 +1218,15 @@ fieldset {
   font-style: italic;
   color: #ff5635;
 }
+
+.xhr_message {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 30px;
+  text-align: center;
+  background-color: #b23b3a;
+}
